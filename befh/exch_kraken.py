@@ -3,8 +3,11 @@ from befh.exchange import ExchangeGateway
 from befh.market_data import L2Depth, Trade
 from befh.instrument import Instrument
 from befh.util import Logger
+
 import time
 import threading
+from . import update_docs
+
 from functools import partial
 from datetime import datetime
 
@@ -160,11 +163,11 @@ class ExchGwKraken(ExchangeGateway):
         while True:
             try:
                 l2_depth = self.api_socket.get_order_book(instmt)
-                if l2_depth is not None and l2_depth.is_diff(instmt.get_l2_depth()):
-                    instmt.set_prev_l2_depth(instmt.l2_depth.copy())
-                    instmt.set_l2_depth(l2_depth)
-                    instmt.incr_order_book_id()
-                    self.insert_order_book(instmt)
+                # if l2_depth is not None and l2_depth.is_diff(instmt.get_l2_depth()):
+                #     instmt.set_prev_l2_depth(instmt.l2_depth.copy())
+                #     instmt.set_l2_depth(l2_depth)
+                #     instmt.incr_order_book_id()
+                #     self.insert_order_book(instmt)
             except Exception as e:
                 Logger.error(self.__class__.__name__,
                           "Error in order book: %s" % e)
@@ -181,8 +184,7 @@ class ExchGwKraken(ExchangeGateway):
             try:
                 ret = self.api_socket.get_trades(instmt)
                 for trade in ret:
-                    instmt.incr_trade_id()
-                    self.insert_trade(instmt, trade)
+                    update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
                     
                 # After the first time of getting the trade, indicate the instrument
                 # is recovered

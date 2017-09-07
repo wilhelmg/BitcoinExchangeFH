@@ -4,9 +4,12 @@ from befh.market_data import L2Depth, Trade
 from befh.util import Logger
 from befh.instrument import Instrument
 from befh.sql_client_template import SqlClientTemplate
+
 import time
 import threading
 import random
+from . import update_docs
+
 from functools import partial
 from datetime import datetime, timedelta
 
@@ -17,7 +20,7 @@ class ExchGwApiQuoine(RESTfulApiSocket):
     """
     def __init__(self):
         RESTfulApiSocket.__init__(self)
-        
+
     @classmethod
     def get_timestamp_offset(cls):
         return 1
@@ -221,11 +224,11 @@ class ExchGwQuoine(ExchangeGateway):
                 ExchGwQuoine.last_query_time = datetime.now()
                 try:
                     l2_depth = self.api_socket.get_order_book(instmt)
-                    if l2_depth is not None and l2_depth.is_diff(instmt.get_l2_depth()):
-                        instmt.set_prev_l2_depth(instmt.get_l2_depth())
-                        instmt.set_l2_depth(l2_depth)
-                        instmt.incr_order_book_id()
-                        self.insert_order_book(instmt)
+                    # if l2_depth is not None and l2_depth.is_diff(instmt.get_l2_depth()):
+                    #     instmt.set_prev_l2_depth(instmt.get_l2_depth())
+                    #     instmt.set_l2_depth(l2_depth)
+                    #     instmt.incr_order_book_id()
+                    #     self.insert_order_book(instmt)
                 except Exception as e:
                     Logger.error(self.__class__.__name__, "Error in order book: %s" % e)
                 ExchGwQuoine.last_query_time_lock.release()
@@ -252,10 +255,7 @@ class ExchGwQuoine(ExchangeGateway):
                         assert isinstance(trade.trade_id, str), "trade.trade_id(%s) = %s" % (type(trade.trade_id), trade.trade_id)
                         assert isinstance(instmt.get_exch_trade_id(), str), \
                             "instmt.get_exch_trade_id()(%s) = %s" % (type(instmt.get_exch_trade_id()), instmt.get_exch_trade_id())
-                        if int(trade.trade_id) > int(instmt.get_exch_trade_id()):
-                            instmt.set_exch_trade_id(trade.trade_id)
-                            instmt.incr_trade_id()
-                            self.insert_trade(instmt, trade)
+                        update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
 
                     # After the first time of getting the trade, indicate the instrument
                     # is recovered

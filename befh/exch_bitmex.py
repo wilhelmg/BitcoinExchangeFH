@@ -3,9 +3,12 @@ from befh.market_data import L2Depth, Trade
 from befh.exchange import ExchangeGateway
 from befh.instrument import Instrument
 from befh.util import Logger
+
 import time
 import threading
 import json
+from . import update_docs
+
 from functools import partial
 from datetime import datetime
 
@@ -203,18 +206,16 @@ class ExchGwBitmex(ExchangeGateway):
                     if trade_raw["symbol"] == instmt.get_instmt_code():
                         # Filter out the initial subscriptions
                         trade = self.api_socket.parse_trade(instmt, trade_raw)
-                        if trade.trade_id != instmt.get_exch_trade_id():
-                            instmt.incr_trade_id()
-                            instmt.set_exch_trade_id(trade.trade_id)
-                            self.insert_trade(instmt, trade)
+                        update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+
             elif message['table'] == 'orderBook10':
                 for data in message['data']:
                     if data["symbol"] == instmt.get_instmt_code():
                         instmt.set_prev_l2_depth(instmt.get_l2_depth().copy())
                         self.api_socket.parse_l2_depth(instmt, data)
-                        if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
-                            instmt.incr_order_book_id()
-                            self.insert_order_book(instmt)
+                        # if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
+                        #     instmt.incr_order_book_id()
+                        #     self.insert_order_book(instmt)
             else:
                 Logger.info(self.__class__.__name__, json.dumps(message,indent=2))
         else:

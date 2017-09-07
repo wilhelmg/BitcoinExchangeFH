@@ -3,9 +3,12 @@ from befh.exchange import ExchangeGateway
 from befh.instrument import Instrument
 from befh.ws_api_socket import WebSocketApiClient
 from befh.util import Logger
+
 import time
 import threading
 import json
+from . import update_docs
+
 from functools import partial
 from datetime import datetime
 
@@ -229,9 +232,9 @@ class ExchGwBitfinex(ExchangeGateway):
                 else:
                     return
 
-                if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
-                    instmt.incr_order_book_id()
-                    self.insert_order_book(instmt)
+                # if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
+                #     instmt.incr_order_book_id()
+                #     self.insert_order_book(instmt)
 
             elif message[0] == instmt.get_trades_channel_id():
                 # No recovery trade
@@ -253,10 +256,11 @@ class ExchGwBitfinex(ExchangeGateway):
 
                 if message[1] == 'tu':
                     trade = self.api_socket.parse_trade(instmt, message[3:])
-                    if int(trade.trade_id) > int(instmt.get_exch_trade_id()):
-                        instmt.incr_trade_id()
-                        instmt.set_exch_trade_id(trade.trade_id)
-                        self.insert_trade(instmt, trade)
+                    update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+                    # if int(trade.trade_id) > int(instmt.get_exch_trade_id()):
+                    #     instmt.incr_trade_id()
+                    #     instmt.set_exch_trade_id(trade.trade_id)
+                    #     self.insert_trade(instmt, trade)
 
     def start(self, instmt):
         """

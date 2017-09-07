@@ -3,9 +3,12 @@ from befh.market_data import L2Depth, Trade
 from befh.exchange import ExchangeGateway
 from befh.instrument import Instrument
 from befh.util import Logger
+
 import time
 import threading
 import json
+from . import update_docs
+
 from functools import partial
 from datetime import datetime
 
@@ -19,7 +22,7 @@ class ExchGwOkCoinWs(WebSocketApiClient):
         Constructor
         """
         WebSocketApiClient.__init__(self, 'ExchGwOkCoin')
-        
+
     @classmethod
     def get_order_book_timestamp_field_name(cls):
         return 'timestamp'
@@ -177,17 +180,14 @@ class ExchGwOkCoin(ExchangeGateway):
                         self.api_socket.parse_l2_depth(instmt, data)
 
                         # Insert only if the first 5 levels are different
-                        if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
-                            instmt.incr_order_book_id()
-                            self.insert_order_book(instmt)
+                        # if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
+                        #     instmt.incr_order_book_id()
+                        #     self.insert_order_book(instmt)
 
                     elif message['channel'] == instmt.get_trades_channel_id():
                         for trade_raw in message['data']:
                             trade = self.api_socket.parse_trade(instmt, trade_raw)
-                            if trade.trade_id != instmt.get_exch_trade_id():
-                                instmt.incr_trade_id()
-                                instmt.set_exch_trade_id(trade.trade_id)
-                                self.insert_trade(instmt, trade)
+                            update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
 
                 elif 'success' in keys:
                     Logger.info(self.__class__.__name__, "Subscription to channel %s is %s" \

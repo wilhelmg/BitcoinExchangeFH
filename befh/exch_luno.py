@@ -4,10 +4,13 @@ from befh.exchange import ExchangeGateway
 from befh.instrument import Instrument
 from befh.sql_client_template import SqlClientTemplate
 from befh.util import Logger
+
 import os
 import time
 import threading
 import json
+from . import update_docs
+
 from pprint import pformat
 from functools import partial
 from datetime import datetime
@@ -265,36 +268,34 @@ class ExchGwLuno(ExchangeGateway):
         if "bids" in keys:
             self.order_book = self.api_socket.parse_l2_depth(instmt, message)
             # Insert only if the first 5 levels are different
-            if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
-                instmt.incr_order_book_id()
-                self.insert_order_book(instmt)
+            # if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
+            #     instmt.incr_order_book_id()
+            #     self.insert_order_book(instmt)
 
         elif "create_update" in keys:
             if message['create_update']:
                 message['create_update'].update({"timestamp": message['timestamp']})
                 self.api_socket.parse_l2_depth(instmt, message['create_update'])
                 # Insert only if the first 5 levels are different
-                if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
-                    instmt.incr_order_book_id()
-                    self.insert_order_book(instmt)
+                # if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
+                #     instmt.incr_order_book_id()
+                #     self.insert_order_book(instmt)
 
             elif message['delete_update']:
                 message['delete_update'].update({"timestamp": message['timestamp']})
                 self.api_socket.parse_l2_depth(instmt, message['delete_update'])
                 # Insert only if the first 5 levels are different
-                if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
-                    instmt.incr_order_book_id()
-                    self.insert_order_book(instmt)
+                # if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
+                #     instmt.incr_order_book_id()
+                #     self.insert_order_book(instmt)
 
             elif message['trade_updates']:
                 for new_trade in message['trade_updates']:
                     new_trade.update({"timestamp": message['timestamp']})
                     trade = self.api_socket.parse_trade(instmt, new_trade)
                     self.api_socket.parse_l2_depth(instmt, new_trade)
-                    if trade.trade_id != instmt.get_exch_trade_id():
-                        instmt.incr_trade_id()
-                        instmt.set_exch_trade_id(trade.trade_id)
-                        self.insert_trade(instmt, trade)
+                    update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+
 
         else:
             Logger.error(self.__class__.__name__, "Unrecognised message:\n" + json.dumps(message))
