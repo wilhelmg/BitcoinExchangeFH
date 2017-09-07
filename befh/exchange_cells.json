@@ -1,0 +1,42 @@
+{
+  "AltcoinTrader": {
+    "BTCZAR": {"price": "C23"},
+    "BCCZAR": {"price": "C23"},
+    "ETHZAR": {"price": "C23"},
+    "LTCZAR": {"price": "C23"},
+    "ZECZAR": {"price": "C23"},
+    "XRPZAR": {"price": "C23"},
+    "DASHZAR": {"price": "C23"},
+    "NMCZAR": {"price": "C23"}
+  },
+  "Bitfinex": {
+    "BTCUSD": {"price": "C24"},
+    "ETHUSD": {"price": "C24"},
+    "LTCUSD": {"price": "C24"},
+    "XRPUSD": {"price": "C24"}
+  },
+  "BitMEX": {
+    "": {"price": "C25"}},
+  "Bitstamp": {
+    "": {"price": "C26"}},
+  "Bittrex": {
+    "": {"price": "C27"}},
+  "BTCC": {
+    "": {"price": "C28"}},
+  "Gatecoin": {
+    "": {"price": "C29"}},
+  "Gdax": {
+    "": {"price": "C30"}},
+  "Kraken": {
+    "": {"price": "C31"}},
+  "Luno": {
+    "": {"price": "D32"}},
+  "OkCoin": {
+    "": {"price": "C33"}},
+  "Poloniex": {
+    "": {"price": "C34"}},
+  "Quoine": {
+    "": {"price": "C35"}},
+  "Yunbi": {
+    "": {"price": "C36"}},
+}
