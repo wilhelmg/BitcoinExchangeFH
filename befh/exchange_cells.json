@@ -1,42 +1,479 @@
 {
-  "AltcoinTrader": {
-    "BTCZAR": {"price": "C23"},
-    "BCCZAR": {"price": "C23"},
-    "ETHZAR": {"price": "C23"},
-    "LTCZAR": {"price": "C23"},
-    "ZECZAR": {"price": "C23"},
-    "XRPZAR": {"price": "C23"},
-    "DASHZAR": {"price": "C23"},
-    "NMCZAR": {"price": "C23"}
+  "exchanges": {
+    "AltcoinTrader": {
+      "BTCZAR": {
+        "base": "BTC",
+        "counter": "ZAR"},
+      "BCCZAR": {
+        "base": "BCH",
+        "counter": "ZAR"},
+      "ETHZAR": {
+        "base": "ETH",
+        "counter": "ZAR"},
+      "LTCZAR": {
+        "base": "LTC",
+        "counter": "ZAR"},
+      "ZECZAR": {
+        "base": "ZEC",
+        "counter": "ZAR"},
+      "XRPZAR": {
+        "base": "XRP",
+        "counter": "ZAR"},
+      "DASHZAR": {
+        "base": "DASH",
+        "counter": "ZAR"},
+      "NMCZAR": {
+        "base": "NMC",
+        "counter": "ZAR"}
+    },
+    "Bitfinex": {
+      "BTCUSD": {
+        "base": "BTC",
+        "counter": "USR"},
+      "BCHUSD": {
+        "base": "BCH",
+        "counter": "USD"},
+      "BCHBTC": {
+        "base": "BCH",
+        "counter": "BTC"},
+      "BCHETH": {
+        "base": "BCH",
+        "counter": "ETH"},
+      "ETHUSD": {
+        "base": "ETH",
+        "counter": "USD"},
+      "ETHBTC": {
+        "base": "ETH",
+        "counter": "BTC"},
+      "LTCUSD": {
+        "base": "LTC",
+        "counter": "USD"},
+      "LTCBTC": {
+        "base": "LTC",
+        "counter": "BTC"},
+      "ZECUSD": {
+        "base": "ZEC",
+        "counter": "USD"},
+      "ZECBTC": {
+        "base": "ZEC",
+        "counter": "BTC"},
+      "XRPUSD": {
+        "base": "XRP",
+        "counter": "USD"},
+      "XRPBTC": {
+        "base": "XRP",
+        "counter": "BTC"},
+      "DSHUSD": {
+        "base": "DASH",
+        "counter": "USD"},
+      "DSHBTC": {
+        "base": "DASH",
+        "counter": "BTC"}
+    },
+    "BitMEX": {
+      "XBTUSD": {
+        "base": "BTC",
+        "counter": "USD"}
+    },
+    "Bitstamp": {
+      "btcusd": {
+        "base": "BTC",
+        "counter": "USD"},
+      "btceur": {
+        "base": "BTC",
+        "counter": "EUR"},
+      "eurusd": {
+        "base": "EUR",
+        "counter": "USD"},
+      "ethusd": {
+        "base": "ETH",
+        "counter": "USD"},
+      "etheur": {
+        "base": "ETH",
+        "counter": "EUR"},
+      "ethbtc": {
+        "base": "ETH",
+        "counter": "BTC"},
+      "ltcusd": {
+        "base": "LTC",
+        "counter": "USD"},
+      "ltceur": {
+        "base": "LTC",
+        "counter": "EUR"},
+      "ltcbtc": {
+        "base": "LTC",
+        "counter": "BTC"},
+      "xrpusd": {
+        "base": "XRP",
+        "counter": "USD"},
+      "xrpeur": {
+        "base": "XRP",
+        "counter": "EUR"},
+      "xrpbtc": {
+        "base": "XRP",
+        "counter": "BTC"}
+    },
+    "Bittrex": {
+      "USDT-BTC": {
+        "base": "USDT",
+        "counter": "BTC"},
+      "USDT-BCC": {
+        "base": "USDT",
+        "counter": "BCH"},
+      "BTC-BCC": {
+        "base": "BTC",
+        "counter": "BCH"},
+      "USDT-ETH": {
+        "base": "USDT",
+        "counter": "ETH"},
+      "BTC-ETH": {
+        "base": "BTC",
+        "counter": "ETH"},
+      "USDT-LTC": {
+        "base": "USDT",
+        "counter": "LTC"},
+      "BTC-LTC": {
+        "base": "BTC",
+        "counter": "LTC"},
+      "USDT-ZEC": {
+        "base": "USDT",
+        "counter": "ZEC"},
+      "BTC-ZEC": {
+        "base": "BTC",
+        "counter": "ZEC"},
+      "USDT-XRP": {
+        "base": "USDT",
+        "counter": "XRP"},
+      "BTC-XRP": {
+        "base": "BTC",
+        "counter": "XRP"},
+      "USDT-DASH": {
+        "base": "USDT",
+        "counter": "DASH"},
+      "BTC-DASH": {
+        "base": "BTC",
+        "counter": "DASH"}
+    },
+    "BTCC": {
+      "BTCUSD": {
+        "base": "BTC",
+        "counter": "USD"},
+      "BTCEUR": {
+        "base": "BTC",
+        "counter": "EUR"},
+      "ETHUSD": {
+        "base": "ETH",
+        "counter": "USD"},
+      "ETHEUR": {
+        "base": "ETH",
+        "counter": "EUR"},
+      "ETHBTC": {
+        "base": "ETH",
+        "counter": "BTC"},
+      "BCHBTC": {
+        "base": "BCH",
+        "counter": "BTC"}
+    },
+    "Gatecoin": {
+      "BTCUSD": {
+        "base": "BTC",
+        "counter": "USD"}
+    },
+    "Gdax": {
+      "BTC-USD": {
+        "base": "BTC",
+        "counter": "USD"},
+      "BTC-EUR": {
+        "base": "BTC",
+        "counter": "EUR"},
+      "BTC-GBP": {
+        "base": "BTC",
+        "counter": "GBP"},
+      "ETH-USD": {
+        "base": "ETH",
+        "counter": "USD"},
+      "ETH-EUR": {
+        "base": "ETH",
+        "counter": "EUR"},
+      "ETH-BTC": {
+        "base": "ETH",
+        "counter": "BTC"},
+      "LTC-USD": {
+        "base": "LTC",
+        "counter": "USD"},
+      "LTC-EUR": {
+        "base": "LTC",
+        "counter": "EUR"},
+      "LTC-BTC": {
+        "base": "LTC",
+        "counter": "BTC"}
+    },
+    "Kraken": {
+      "XBTUSD": {
+        "base": "BTC",
+        "counter": "USD"},
+      "XBTEUR": {
+        "base": "BTC",
+        "counter": "EUR"},
+      "XBTGBP": {
+        "base": "BTC",
+        "counter": "GBP"},
+      "XBTCAD": {
+        "base": "BTC",
+        "counter": "CAD"},
+      "XBTJPY": {
+        "base": "BTC",
+        "counter": "JPY"},
+      "BCHEUR": {
+        "base": "BCH",
+        "counter": "EUR"},
+      "BCHUSD": {
+        "base": "BCH",
+        "counter": "USD"},
+      "BCHXBT": {
+        "base": "BTC",
+        "counter": "BTC"},
+      "ETHUSD": {
+        "base": "ETH",
+        "counter": "USD"},
+      "ETHCAD": {
+        "base": "ETH",
+        "counter": "CAD"},
+      "ETHEUR": {
+        "base": "ETH",
+        "counter": "EUR"},
+      "ETHGBP": {
+        "base": "ETH",
+        "counter": "GBP"},
+      "ETHJPY": {
+        "base": "ETH",
+        "counter": "JPY"},
+      "ETHXBT": {
+        "base": "ETH",
+        "counter": "BTC"},
+      "LTCUSD": {
+        "base": "LTC",
+        "counter": "USD"},
+      "LTCEUR": {
+        "base": "LTC",
+        "counter": "EUR"},
+      "LTCXBT": {
+        "base": "LTC",
+        "counter": "BTC"},
+      "ZECUSD": {
+        "base": "ZEC",
+        "counter": "USD"},
+      "ZECEUR": {
+        "base": "ZEC",
+        "counter": "EUR"},
+      "ZECXBT": {
+        "base": "ZEC",
+        "counter": "BTC"},
+      "XRPUSD": {
+        "base": "XRP",
+        "counter": "USD"},
+      "XRPEUR": {
+        "base": "XRP",
+        "counter": "EUR"},
+      "XRPXBT": {
+        "base": "XRP",
+        "counter": "BTC"},
+      "DASHEUR": {
+        "base": "DASH",
+        "counter": "EUR"},
+      "DASHUSD": {
+        "base": "DASH",
+        "counter": "USD"},
+      "DASHXBT": {
+        "base": "DASH",
+        "counter": "BTC"}
+    },
+    "Luno": {
+      "XBTZAR": {
+        "base": "BTC",
+        "counter": "ZAR"}
+    },
+    "OkCoin": {
+      "btc_cny": {
+        "base": "BTC",
+        "counter": "CNY"},
+      "bcc_cny": {
+        "base": "BCH",
+        "counter": "CNY"},
+      "eth_cny": {
+        "base": "ETH",
+        "counter": "CNY"},
+      "ltc_cny": {
+        "base": "LTC",
+        "counter": "CNY"}
+    },
+    "Poloniex": {
+      "USDT_BTC": {
+        "base": "USDT",
+        "counter": "BTC"},
+      "USDT_BCH": {
+        "base": "USDT",
+        "counter": "BCH"},
+      "USDT_ETH": {
+        "base": "USDT",
+        "counter": "ETH"},
+      "USDT_LTC": {
+        "base": "USDT",
+        "counter": "LTC"},
+      "USDT_ZEC": {
+        "base": "USDT",
+        "counter": "ZEC"},
+      "USDT_XRP": {
+        "base": "USDT",
+        "counter": "XRP"},
+      "USDT_DASH": {
+        "base": "USDT",
+        "counter": "DASH"},
+      "BTC_ETH": {
+        "base": "BTC",
+        "counter": "ETH"},
+      "BTC_LTC": {
+        "base": "BTC",
+        "counter": "LTC"},
+      "BTC_ZEC": {
+        "base": "BTC",
+        "counter": "ZEC"},
+      "BTC_XRP": {
+        "base": "BTC",
+        "counter": "XRP"},
+      "BTC_DASH": {
+        "base": "BTC",
+        "counter": "DASH"},
+      "BTC_NMC": {
+        "base": "BTC",
+        "counter": "NMC"},
+      "ETH_BCH": {
+        "base": "ETH",
+        "counter": "BCH"},
+      "BTC_BCH": {
+        "base": "BTC",
+        "counter": "BCH"},
+      "ETH_ZEC": {
+        "base": "ETH",
+        "counter": "ZEC"}
+    },
+    "Quoine": {
+      "BTCUSD": {
+        "base": "BTC",
+        "counter": "USD"},
+      "BTCEUR": {
+        "base": "BTC",
+        "counter": "EUR"},
+      "BTCJPY": {
+        "base": "BTC",
+        "counter": "JPY"},
+      "BTCSGD": {
+        "base": "BTC",
+        "counter": "SGD"},
+      "BTCHKD": {
+        "base": "BTC",
+        "counter": "HKD"},
+      "BTCIDR": {
+        "base": "BTC",
+        "counter": "IDR"},
+      "BTCAUD": {
+        "base": "BTC",
+        "counter": "AUD"},
+      "BTCPHP": {
+        "base": "BTC",
+        "counter": "PHP"},
+      "BTCCNY": {
+        "base": "BTC",
+        "counter": "CNY"},
+      "BTCINR": {
+        "base": "BTC",
+        "counter": "INR"},
+      "ETHUSD": {
+        "base": "ETH",
+        "counter": "USD"},
+      "ETHEUR": {
+        "base": "ETH",
+        "counter": "EUR"},
+      "ETHJPY": {
+        "base": "ETH",
+        "counter": "JPY"},
+      "ETHSGD": {
+        "base": "ETH",
+        "counter": "SGD"},
+      "ETHHKD": {
+        "base": "ETH",
+        "counter": "HKD"},
+      "ETHIDR": {
+        "base": "ETH",
+        "counter": "IDR"},
+      "ETHAUD": {
+        "base": "ETH",
+        "counter": "AUD"},
+      "ETHPHP": {
+        "base": "ETH",
+        "counter": "PHP"},
+      "ETHCNY": {
+        "base": "ETH",
+        "counter": "CNY"},
+      "ETHINR": {
+        "base": "ETH",
+        "counter": "INR"},
+      "ETHBTC": {
+        "base": "ETH",
+        "counter": "BTC"},
+      "BCHUSD": {
+        "base": "BCH",
+        "counter": "USD"},
+      "BCHSGD": {
+        "base": "BCH",
+        "counter": "SGD"},
+      "BCHJPY": {
+        "base": "BCH",
+        "counter": "JPY"}
+    },
+    "Yunbi": {
+      "BTCUSD": {
+        "base": "BTC",
+        "counter": "USD"}
+    }
   },
-  "Bitfinex": {
-    "BTCUSD": {"price": "C24"},
-    "ETHUSD": {"price": "C24"},
-    "LTCUSD": {"price": "C24"},
-    "XRPUSD": {"price": "C24"}
-  },
-  "BitMEX": {
-    "": {"price": "C25"}},
-  "Bitstamp": {
-    "": {"price": "C26"}},
-  "Bittrex": {
-    "": {"price": "C27"}},
-  "BTCC": {
-    "": {"price": "C28"}},
-  "Gatecoin": {
-    "": {"price": "C29"}},
-  "Gdax": {
-    "": {"price": "C30"}},
-  "Kraken": {
-    "": {"price": "C31"}},
-  "Luno": {
-    "": {"price": "D32"}},
-  "OkCoin": {
-    "": {"price": "C33"}},
-  "Poloniex": {
-    "": {"price": "C34"}},
-  "Quoine": {
-    "": {"price": "C35"}},
-  "Yunbi": {
-    "": {"price": "C36"}},
+  "fields": {
+    "exchange_order": [
+      "AltcoinTrader",
+      "Bitfinex",
+      "BitMEX",
+      "Bitstamp",
+      "Bittrex",
+      "BTCC",
+      "Gatecoin",
+      "Gdax",
+      "Kraken",
+      "Luno",
+      "OkCoin",
+      "Poloniex",
+      "Quoine",
+      "Yunbi"
+    ],
+    "price_column": "B",
+    "arbitrage_column": "K",
+    "currencies": {
+      "BTC": "22",
+      "BCH": "38",
+      "DASH": "54",
+      "ETH": "70",
+      "LTC": "86",
+      "NMC": "102",
+      "XRP": "118",
+      "ZEC": "134"
+    },
+    "price_columns": [
+      "USD",
+      "ZAR",
+      "BTC",
+      "EUR",
+      "Deposit",
+      "Trading",
+      "Withdrawal"
+    ]
+  }
 }
