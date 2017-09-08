@@ -3,16 +3,17 @@ import sys
 import json
 import pygsheets
 
+from pprint import pprint
 from pygsheets.exceptions import RequestError
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 
-def update_doc(exchange, price):
+def update_doc(exchange, instmt, price):
     while True:
         count = 0
         try:
-            exchange_cell = get_cell_number(exchange)
+            exchange_cell = get_cell_number(exchange, instmt)
 
             gc = auth_sheets()
 
@@ -31,12 +32,14 @@ def update_doc(exchange, price):
             return False
 
 
-def get_cell_number(exchange):
+def get_cell_number(exchange, instmt):
     cells_config = PROJECT_ROOT + os.sep + "exchange_cells.json"
+    print(cells_config)
     with open(cells_config, 'r') as read:
         cells = json.load(read)
+    pprint(cells)
 
-    return cells[exchange]['price']
+    return cells[exchange][instmt]['price']
 
 
 def auth_sheets(path_to_creds=None):
