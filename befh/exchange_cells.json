@@ -1,4 +1,42 @@
 {
+  "fields": {
+    "start": "B2",
+    "currencies": [
+      "BCH",
+      "BTC",
+      "DASH",
+      "ETH",
+      "LTC",
+      "NMC",
+      "XRP",
+      "ZEC"
+    ],
+    "fiat": [
+      "AUD",
+      "CAD",
+      "CNY",
+      "EUR",
+      "GBP",
+      "HKD",
+      "IDR",
+      "INR",
+      "JPY",
+      "PHP",
+      "SGD",
+      "USD",
+      "ZAR"
+    ],
+    "currency_rows": [
+      "Currency",
+      "USD",
+      "Difference"
+    ],
+    "info_columns": [
+      "Trading",
+      "Deposit",
+      "Withdrawal"
+    ]
+  },
   "exchanges": [
     {
       "AltcoinTrader": {
@@ -600,40 +638,5 @@
         }
       }
     },
-  ],
-  "fields": {
-    "start": "B2",
-    "price_column": "B",
-    "arbitrage_column": "K",
-    "currencies": [
-      "BCH",
-      "BTC",
-      "DASH",
-      "ETH",
-      "LTC",
-      "NMC",
-      "XRP",
-      "ZEC"
-    ],
-    "fiat": [
-      "AUD",
-      "CAD",
-      "CNY",
-      "EUR",
-      "GBP",
-      "HKD",
-      "IDR",
-      "INR",
-      "JPY",
-      "PHP",
-      "SGD",
-      "USD",
-      "ZAR"
-    ],
-    "info_columns": [
-      "Deposit",
-      "Trading",
-      "Withdrawal"
-    ]
-  }
+  ]
 }
