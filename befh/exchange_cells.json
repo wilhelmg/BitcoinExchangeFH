@@ -1,6 +1,8 @@
 {
   "fields": {
     "start": "B2",
+    "row_spread": 1,
+    "column_spread": 1,
     "currencies": [
       "BCH",
       "BTC",
@@ -10,6 +12,11 @@
       "NMC",
       "XRP",
       "ZEC"
+    ],
+    "currency_rows": [
+      "Currency",
+      "USD",
+      "Difference"
     ],
     "fiat": [
       "AUD",
@@ -26,22 +33,28 @@
       "USD",
       "ZAR"
     ],
-    "currency_rows": [
-      "Currency",
-      "USD",
-      "Difference"
-    ],
     "info_columns": [
       "Trading",
       "Deposit",
       "Withdrawal"
-    ]
+    ],
+    "catagories_color": [
+            0.6431373,
+            0.7607843,
+            0.95686275,
+            0
+          ]
   },
   "exchanges": [
     {
       "AltcoinTrader": {
         "info": {
-          "cell_color": "lightyellow2",
+          "cell_color": [
+            1,
+            0.8980392,
+            0.6,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -86,7 +99,12 @@
     {
       "Bitfinex": {
         "info": {
-          "cell_color": "lightgreen3",
+          "cell_color": [
+            0.8509804,
+            0.91764706,
+            0.827451,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -155,7 +173,12 @@
     {
       "BitMEX": {
         "info": {
-          "cell_color": "lightpurple1",
+          "cell_color": [
+            0.5568628,
+            0.4862745,
+            0.7647059,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -172,7 +195,12 @@
     {
       "Bitstamp": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.5764706,
+            0.76862746,
+            0.49019608,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -233,7 +261,12 @@
     {
       "Bittrex": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.8784314,
+            0.4,
+            0.4,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -298,7 +331,12 @@
     {
       "BTCC": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.91764706,
+            0.6,
+            0.6,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -335,7 +373,12 @@
     {
       "Gatecoin": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.9019608,
+            0.5686275,
+            0.21960784,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -352,7 +395,12 @@
     {
       "Gdax": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.4627451,
+            0.64705884,
+            0.6862745,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -401,7 +449,12 @@
     {
       "Kraken": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.62352943,
+            0.77254903,
+            0.9098039,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -518,7 +571,12 @@
     {
       "Luno": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.42745098,
+            0.61960787,
+            0.92156863,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -535,7 +593,12 @@
     {
       "OkCoin": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.23529412,
+            0.47058824,
+            0.84705883,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -564,7 +627,12 @@
     {
       "Poloniex": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.6431373,
+            0.7607843,
+            0.95686275,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -641,12 +709,17 @@
     {
       "Quoine": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.7058824,
+            0.654902,
+            0.8392157,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
             "withdrawal": ""
-          }}
+          }
         },
         "currency_pairs": {
         "BTCUSD": {
@@ -745,12 +818,17 @@
           "base": "BCH",
           "counter": "JPY"
         }
-      }
+      }}
     },
     {
       "Yunbi": {
         "info": {
-          "cell_color": "",
+          "cell_color": [
+            0.50980395,
+            0.9529412,
+            1,
+            0
+          ],
           "fees": {
             "trading": "",
             "deposit": "",
@@ -763,6 +841,6 @@
           "counter": "USD"
         }
       }}
-    },
+    }
   ]
 }
