@@ -11,7 +11,6 @@ class ArbitrageDocs(object):
     def __init__(self):
         self.project_root = os.path.abspath(os.path.dirname(__file__))
         self.gc = None
-        self._path_to_creds =
 
     def update_doc(self, exchange, instmt, price):
         while True:
@@ -26,6 +25,7 @@ class ArbitrageDocs(object):
 
                 sheet = doc.worksheet_by_title("ArbitrageTable")
 
+                new_cell = doc.Cell()
                 sheet.update_cell(exchange_cell, price)
                 return True
 
@@ -36,7 +36,6 @@ class ArbitrageDocs(object):
             if count > 10:
                 return False
 
-
     def get_cell_number(self, exchange, instmt):
         cells_config = self.project_root + os.sep + "exchange_cells.json"
         with open(cells_config, 'r') as read:
@@ -44,7 +43,6 @@ class ArbitrageDocs(object):
         pprint(cells)
 
         return cells[exchange][instmt]['price']
-
 
     def auth_sheets(self, path_to_creds=None):
         if not path_to_creds:
@@ -57,5 +55,5 @@ class ArbitrageDocs(object):
 
         self.gc = pygsheets.authorize(service_file=credentials, no_cache=True)
 
-    def update_exchanges_sheet(self,):
+    # def update_exchanges_sheet(self,):
 

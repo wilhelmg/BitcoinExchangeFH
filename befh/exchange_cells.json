@@ -40,6 +40,15 @@
   "exchanges": [
     {
       "AltcoinTrader": {
+        "info": {
+          "cell_color": "lightyellow2",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "BTCZAR": {
           "base": "BTC",
           "counter": "ZAR"
@@ -72,10 +81,19 @@
           "base": "NMC",
           "counter": "ZAR"
         }
-      }
+      }}
     },
     {
       "Bitfinex": {
+        "info": {
+          "cell_color": "lightgreen3",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "BTCUSD": {
           "base": "BTC",
           "counter": "USR"
@@ -132,18 +150,36 @@
           "base": "DASH",
           "counter": "BTC"
         }
-      }
+      }}
     },
     {
       "BitMEX": {
+        "info": {
+          "cell_color": "lightpurple1",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "XBTUSD": {
           "base": "BTC",
           "counter": "USD"
         }
-      }
+      }}
     },
     {
       "Bitstamp": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "btcusd": {
           "base": "BTC",
           "counter": "USD"
@@ -192,10 +228,19 @@
           "base": "XRP",
           "counter": "BTC"
         }
-      }
+      }}
     },
     {
       "Bittrex": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "USDT-BTC": {
           "base": "USDT",
           "counter": "BTC"
@@ -248,10 +293,19 @@
           "base": "BTC",
           "counter": "DASH"
         }
-      }
+      }}
     },
     {
       "BTCC": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "BTCUSD": {
           "base": "BTC",
           "counter": "USD"
@@ -276,18 +330,36 @@
           "base": "BCH",
           "counter": "BTC"
         }
-      }
+      }}
     },
     {
       "Gatecoin": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "BTCUSD": {
           "base": "BTC",
           "counter": "USD"
         }
-      }
+      }}
     },
     {
       "Gdax": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "BTC-USD": {
           "base": "BTC",
           "counter": "USD"
@@ -324,10 +396,19 @@
           "base": "LTC",
           "counter": "BTC"
         }
-      }
+      }}
     },
     {
       "Kraken": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "XBTUSD": {
           "base": "BTC",
           "counter": "USD"
@@ -432,18 +513,36 @@
           "base": "DASH",
           "counter": "BTC"
         }
-      }
+      }}
     },
     {
       "Luno": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "XBTZAR": {
           "base": "BTC",
           "counter": "ZAR"
         }
-      }
+      }}
     },
     {
       "OkCoin": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "btc_cny": {
           "base": "BTC",
           "counter": "CNY"
@@ -460,10 +559,19 @@
           "base": "LTC",
           "counter": "CNY"
         }
-      }
+      }}
     },
     {
       "Poloniex": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "USDT_BTC": {
           "base": "USDT",
           "counter": "BTC"
@@ -528,10 +636,19 @@
           "base": "ETH",
           "counter": "ZEC"
         }
-      }
+      }}
     },
     {
       "Quoine": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }}
+        },
+        "currency_pairs": {
         "BTCUSD": {
           "base": "BTC",
           "counter": "USD"
@@ -632,11 +749,20 @@
     },
     {
       "Yunbi": {
+        "info": {
+          "cell_color": "",
+          "fees": {
+            "trading": "",
+            "deposit": "",
+            "withdrawal": ""
+          }
+        },
+        "currency_pairs": {
         "BTCUSD": {
           "base": "BTC",
           "counter": "USD"
         }
-      }
+      }}
     },
   ]
 }
