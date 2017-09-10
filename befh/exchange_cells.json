@@ -13,7 +13,7 @@
       "XRP",
       "ZEC"
     ],
-    "currency_rows": [
+    "currency_info_rows": [
       "Currency",
       "USD",
       "Difference"
@@ -43,7 +43,19 @@
             0.7607843,
             0.95686275,
             0
-          ]
+          ],
+    "currency_rows_color": [
+      0.6,
+      0.6,
+      0.6,
+      0
+    ],
+    "currency_info_rows_color": [
+      0.5764706,
+      0.76862746,
+      0.49019608,
+      0
+    ]
   },
   "exchanges": [
     {
