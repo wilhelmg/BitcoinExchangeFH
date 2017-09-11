@@ -47,12 +47,14 @@ class ArbitrageDoc(object):
         self.fiat_len = len(self.fiat)
         self.info_columns = self.sheet_info['fields']['info_columns']
 
-        self.catagories_color = tuple(self.sheet_info['fields']['catagories_color'])
+        self.categories_color = tuple(self.sheet_info['fields']['catagories_color'])
         self.currency_row_color = tuple(self.sheet_info['fields']['currency_rows_color'])
         self.currency_info_rows_color = tuple(self.sheet_info['fields']['currency_info_rows_color'])
 
         self.current_exch_label = self.start_cell_label
         self.current_exch_tuple = sheet_utils.format_addr(self.current_exch_label)
+
+        self.table_range = None
 
 
     # def update_doc(self, exchange, instmt, price):
@@ -88,6 +90,14 @@ class ArbitrageDoc(object):
     #     return result.groupdict()
 
     # def validate_exch_tables(self):
+
+    def get_table_range(self, exchange):
+        table_start = self.current_exch_label
+        last_row = self.current_exch_tuple[0] + self.currencies_len * 3
+        last_col = self.current_exch_tuple[1] + 1 + self.fiat_len + len(self.info_columns)
+        table_end = sheet_utils.format_addr((last_row, last_col))
+
+        return pygsheets.DataRange(start=table_start, end=table_end, worksheet=self.sheet)
 
     def validate_exch_table(self, exchange):
         exchange_start_cell = self.sheet.find(query=exchange)
@@ -132,7 +142,7 @@ class ArbitrageDoc(object):
 
         current_col_cell = pygsheets.Cell(current_col_label, val="Category", worksheet=self.sheet)
 
-        current_col_cell.color = self.catagories_color
+        current_col_cell.color = self.categories_color
         current_col_cell.set_text_alignment(alignment="MIDDLE")
         current_col_cell.set_text_alignment(alignment="CENTER")
 
