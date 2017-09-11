@@ -24,7 +24,36 @@ class ArbitrageDoc(object):
 
         self.gc = pygsheets.authorize(service_file=self._service_creds, no_cache=True)
         self.doc = self.gc.open_by_key(self.sheet_key)
-        self.sheet = None
+        self.sheet = self.doc.worksheet_by_title("ExchangesInfo")
+
+        with open(self.exchange_cells, 'r+') as rw:
+            self.sheet_info = json.load(rw)
+
+        self.exchanges = []
+        for exchange in self.sheet_info['exchanges']:
+            for name in exchange:
+                self.exchanges.append(name)
+
+        self.start_cell_label = self.sheet_info['fields']['start']
+        self.start_cell_tuple = sheet_utils.format_addr(self.start_cell_label)
+        self.row_spread = self.sheet_info['fields']['row_spread']
+        self.column_spread = self.sheet_info['fields']['column_spread']
+
+        self.currencies = self.sheet_info['fields']['currencies']
+        self.currencies_len = len(self.currencies)
+        self.currency_info_rows = self.sheet_info['fields']['currency_info_rows']
+
+        self.fiat = self.sheet_info['fields']['fiat']
+        self.fiat_len = len(self.fiat)
+        self.info_columns = self.sheet_info['fields']['info_columns']
+
+        self.catagories_color = tuple(self.sheet_info['fields']['catagories_color'])
+        self.currency_row_color = tuple(self.sheet_info['fields']['currency_rows_color'])
+        self.currency_info_rows_color = tuple(self.sheet_info['fields']['currency_info_rows_color'])
+
+        self.current_exch_label = self.start_cell_label
+        self.current_exch_tuple = sheet_utils.format_addr(self.current_exch_label)
+
 
     # def update_doc(self, exchange, instmt, price):
     #     while True:
@@ -58,203 +87,185 @@ class ArbitrageDoc(object):
     #     print(result)
     #     return result.groupdict()
 
-    def update_exchange_tables(self, force=False):
-        with open(self.exchange_cells, 'r+') as rw:
-            sheet_info = json.load(rw)
+    # def validate_exch_tables(self):
 
-        exchanges = []
-        for exchange in sheet_info['exchanges']:
-            for name in exchange:
-                exchanges.append(name)
+    def validate_exch_table(self, exchange):
+        exchange_start_cell = self.sheet.find(query=exchange)
+        if not exchange_start_cell or len(exchange_start_cell) > 2:
+            self.create_exchange_tables()
 
-        start_cell_label = sheet_info['fields']['start']
-        start_cell_tuple = sheet_utils.format_addr(start_cell_label)
-        row_spread = sheet_info['fields']['row_spread']
-        column_spread = sheet_info['fields']['column_spread']
+        self.current_exch_label = exchange_start_cell[0].label
+        self.current_exch_tuple = sheet_utils.format_addr(self.current_exch_label)
 
-        currencies = sheet_info['fields']['currencies']
-        currencies_len = len(currencies)
-        currency_info_rows = sheet_info['fields']['currency_info_rows']
 
-        fiat = sheet_info['fields']['fiat']
-        fiat_len = len(fiat)
-        info_columns = sheet_info['fields']['info_columns']
+    def create_exchange_table(self, exchange):
+        exchange_update_cell_list = []
+        exchange_info = self.sheet_info['exchanges'][self.exchanges.index(exchange)][exchange]
 
-        catagories_color = tuple(sheet_info['fields']['catagories_color'])
-        currency_row_color = tuple(sheet_info['fields']['currency_rows_color'])
-        currency_info_rows_color = tuple(sheet_info['fields']['currency_info_rows_color'])
+        exchange_cell = pygsheets.Cell(self.current_exch_label, val=exchange, worksheet=self.sheet)
+        # exchange_update_cell_list.append(exchange_cell)
+        exchange_cell.set_text_alignment(alignment="MIDDLE")
+        exchange_cell.set_text_alignment(alignment="CENTER")
 
-        sheet = self.doc.worksheet_by_title("ExchangesInfo")
-        sheet.adjust_column_width(start=start_cell_tuple[1]-1, end=start_cell_tuple[1], pixel_size=90)
-        sheet.adjust_column_width(start=start_cell_tuple[1], end=start_cell_tuple[1]+26, pixel_size=75)
+        table_start = self.current_exch_label
+        left_bottom = self.current_exch_tuple[0] + self.currencies_len * 3
+        right_top = self.current_exch_tuple[1] + 1 + self.fiat_len + len(self.info_columns)
+        table_end = sheet_utils.format_addr((left_bottom, right_top))
 
-        current_exch_label = start_cell_label
-        current_exch_tuple = sheet_utils.format_addr(current_exch_label)
+        # log.warning("\ntable_start: {}\nleft_bottom: {}\nright_top: {}\ntable_end: {}".format(
+        #     table_start,
+        #     left_bottom,
+        #     right_top,
+        #     table_end
+        # ))
 
-        for exchange in exchanges:
-            log.warning(
-                "\ncurrent_exch_tuple: {}\ncurrent_exch_label: {}".format(current_exch_tuple, current_exch_label))
+        table_range = pygsheets.DataRange(start=table_start, end=table_end, worksheet=self.sheet)
+        # table_range.applay_format(exchange_cell)
+        exchange_cell.color = tuple(exchange_info['info']['cell_color'])
 
-            exchange_update_cell_list = []
-            exchange_info = sheet_info['exchanges'][exchanges.index(exchange)][exchange]
+        table_range.update_borders()
 
-            exchange_cell = pygsheets.Cell(current_exch_label, val=exchange, worksheet=sheet)
-            # exchange_update_cell_list.append(exchange_cell)
-            exchange_cell.set_text_alignment(alignment="MIDDLE")
-            exchange_cell.set_text_alignment(alignment="CENTER")
+        # exchange_cell.value = exchange
 
-            table_start = current_exch_label
-            left_bottom = current_exch_tuple[0] + currencies_len * 3
-            right_top = current_exch_tuple[1] + 1 + fiat_len + len(info_columns)
-            table_end = sheet_utils.format_addr((left_bottom, right_top))
+        current_col_tuple = (self.current_exch_tuple[0], self.current_exch_tuple[1] + 1)
+        current_col_label = sheet_utils.format_addr(current_col_tuple)
 
-            log.warning("\ntable_start: {}\nleft_bottom: {}\nright_top: {}\ntable_end: {}".format(
-                table_start,
-                left_bottom,
-                right_top,
-                table_end
-            ))
+        current_col_cell = pygsheets.Cell(current_col_label, val="Category", worksheet=self.sheet)
 
-            table_range = pygsheets.DataRange(start=table_start, end=table_end, worksheet=sheet)
-            # table_range.applay_format(exchange_cell)
-            exchange_cell.color = tuple(exchange_info['info']['cell_color'])
+        current_col_cell.color = self.catagories_color
+        current_col_cell.set_text_alignment(alignment="MIDDLE")
+        current_col_cell.set_text_alignment(alignment="CENTER")
 
-            table_range.update_borders()
+        column_range = pygsheets.DataRange(
+            start=current_col_label,
+            end=sheet_utils.format_addr((current_col_tuple[0], right_top)),
+            worksheet=self.sheet
+        )
+        column_range.applay_format(current_col_cell)
 
-            # exchange_cell.value = exchange
+        # exchange_update_cell_list.append(current_col_cell)
+        current_col_cell.value = "Category"
 
-            current_col_tuple = (current_exch_tuple[0], current_exch_tuple[1] + 1)
-            current_col_label = sheet_utils.format_addr(current_col_tuple)
+        time.sleep(1)
 
-            current_col_cell = pygsheets.Cell(current_col_label, val="Category", worksheet=sheet)
+        current_col_tuple = (current_col_tuple[0], current_col_tuple[1] + 1)
+        # fiat_columns_cell_list = []
+        # fiat_columns_cell_list.append(current_col_cell)
+        for i in range(0, self.fiat_len + len(self.info_columns)):
+            labels = self.fiat + self.info_columns
+            current_tuple = (current_col_tuple[0], i + current_col_tuple[1])
+            current_label = sheet_utils.format_addr(current_tuple)
 
-            current_col_cell.color = catagories_color
-            current_col_cell.set_text_alignment(alignment="MIDDLE")
-            current_col_cell.set_text_alignment(alignment="CENTER")
+            exchange_update_cell_list.append(pygsheets.Cell(current_label, val=labels[i], worksheet=self.sheet))
 
-            column_range = pygsheets.DataRange(
-                start=current_col_label,
-                end=sheet_utils.format_addr((current_col_tuple[0], right_top)),
-                worksheet=sheet
-            )
-            column_range.applay_format(current_col_cell)
+            # exchange_cell.value = labels[i]
 
-            exchange_update_cell_list.append(current_col_cell)
-            # current_col_cell.value = "Category"
+        # sheet.update_cells(cell_list=fiat_columns_cell_list)
 
-            time.sleep(1)
+        current_row_tuple = (self.current_exch_tuple[0] + 1, self.current_exch_tuple[1])
+        current_row_label = sheet_utils.format_addr(current_row_tuple)
 
-            current_col_tuple = (current_col_tuple[0], current_col_tuple[1] + 1)
-            # fiat_columns_cell_list = []
-            # fiat_columns_cell_list.append(current_col_cell)
-            for i in range(0, fiat_len+len(info_columns)):
-                labels = fiat + info_columns
-                current_tuple = (current_col_tuple[0], i+current_col_tuple[1])
-                current_label = sheet_utils.format_addr(current_tuple)
+        current_cell = pygsheets.Cell(current_row_label, worksheet=self.sheet)
+        current_cell.color = self.currency_row_color
+        current_cell.set_text_alignment(alignment="MIDDLE")
+        current_cell.set_text_alignment(alignment="CENTER")
 
-                exchange_update_cell_list.append(pygsheets.Cell(current_label, val=labels[i], worksheet=sheet))
+        range_start = current_row_label
+        range_end = sheet_utils.format_addr((current_row_tuple[0] + self.currencies_len * 3 - 1, current_row_tuple[1]))
+        currencies_range = pygsheets.DataRange(start=range_start, end=range_end, worksheet=self.sheet)
+        currencies_range.applay_format(current_cell)
 
-                # exchange_cell.value = labels[i]
+        time.sleep(1)
 
-            # sheet.update_cells(cell_list=fiat_columns_cell_list)
+        # currency_rows_cell_list = []
+        for currency in self.currencies:
+            current_cell = pygsheets.Cell(current_row_label, val=currency, worksheet=self.sheet)
+            # current_cell.value = currency
+            exchange_update_cell_list.append(current_cell)
 
-            current_row_tuple = (current_exch_tuple[0]+1, current_exch_tuple[1])
-            current_row_label = sheet_utils.format_addr(current_row_tuple)
+            current_row_label = sheet_utils.format_addr((current_row_tuple[0] + 3, current_row_tuple[1]))
+            current_row_tuple = sheet_utils.format_addr(current_row_label)
 
-            current_cell = pygsheets.Cell(current_row_label, worksheet=sheet)
-            current_cell.color = currency_row_color
-            current_cell.set_text_alignment(alignment="MIDDLE")
-            current_cell.set_text_alignment(alignment="CENTER")
+        # sheet.update_cells(cell_list=currency_rows_cell_list)
 
-            range_start = current_row_label
-            range_end = sheet_utils.format_addr((current_row_tuple[0] + currencies_len * 3 - 1, current_row_tuple[1]))
-            currencies_range = pygsheets.DataRange(start=range_start, end=range_end, worksheet=sheet)
-            currencies_range.applay_format(current_cell)
+        current_row_tuple = (self.current_exch_tuple[0] + 1, self.current_exch_tuple[1])
+        current_row_label = sheet_utils.format_addr(current_row_tuple)
 
-            time.sleep(1)
+        for i in range(0, self.currencies_len):
+            currency_start = current_row_label
+            currency_end = sheet_utils.format_addr((current_row_tuple[0] + 2, current_row_tuple[1]))
+            currency_range = pygsheets.DataRange(start=currency_start, end=currency_end, worksheet=self.sheet)
+            currency_range.merge_cells()
 
-            # currency_rows_cell_list = []
-            for currency in currencies:
-                current_cell = pygsheets.Cell(current_row_label, val=currency, worksheet=sheet)
-                # current_cell.value = currency
+            current_row_label = sheet_utils.format_addr((current_row_tuple[0] + 3, current_row_tuple[1]))
+            current_row_tuple = sheet_utils.format_addr(current_row_label)
+
+        current_row_tuple = (self.current_exch_tuple[0] + 1, self.current_exch_tuple[1] + 1)
+        current_row_label = sheet_utils.format_addr(current_row_tuple)
+
+        current_cell = pygsheets.Cell(current_row_label, worksheet=self.sheet)
+        current_cell.color = self.currency_info_rows_color
+        current_cell.set_text_alignment(alignment="MIDDLE")
+        current_cell.set_text_alignment(alignment="CENTER")
+
+        range_start = current_row_label
+        range_end = sheet_utils.format_addr((current_row_tuple[0] + self.currencies_len * 3 - 1, current_row_tuple[1]))
+        currencies_range = pygsheets.DataRange(start=range_start, end=range_end, worksheet=self.sheet)
+        currencies_range.applay_format(current_cell)
+
+        time.sleep(1)
+
+        # currency_info_rows_cell_list = []
+        for i in range(0, self.currencies_len):
+
+            for ii in range(0, len(self.currency_info_rows)):
+                current_cell_tuple = (current_row_tuple[0] + ii, current_row_tuple[1])
+                current_cell_label = sheet_utils.format_addr(current_cell_tuple)
+
+                current_cell = pygsheets.Cell(current_cell_label, val=self.currency_info_rows[ii], worksheet=self.sheet)
+                # current_cell.value = currency_info_rows[ii]
                 exchange_update_cell_list.append(current_cell)
 
-                current_row_label = sheet_utils.format_addr((current_row_tuple[0] + 3, current_row_tuple[1]))
-                current_row_tuple = sheet_utils.format_addr(current_row_label)
+            current_row_tuple = (current_row_tuple[0] + len(self.currency_info_rows), current_row_tuple[1])
+            current_row_label = sheet_utils.format_addr(current_row_label)
 
-            # sheet.update_cells(cell_list=currency_rows_cell_list)
+        # sheet.update_cells(cell_list=currency_info_rows_cell_list)
 
-            current_row_tuple = (current_exch_tuple[0] + 1, current_exch_tuple[1])
-            current_row_label = sheet_utils.format_addr(current_row_tuple)
+        # base_cell = pygsheets.Cell("A1", worksheet=sheet)
+        # base_cell.set_text_alignment(alignment="MIDDLE")
+        # base_cell.set_text_alignment(alignment="CENTER")
+        # table_range.applay_format(base_cell)
+        while True:
+            count = 0
+            try:
+                self.sheet.update_cells(cell_list=exchange_update_cell_list)
+                break
+            except RequestError as e:
+                log.warning("Encountered RequestError: {}".format(e))
+                count += 1
+                if count >= 10:
+                    raise RequestError(e)
 
-            for i in range(0, currencies_len):
-                currency_start = current_row_label
-                currency_end = sheet_utils.format_addr((current_row_tuple[0] + 2, current_row_tuple[1]))
-                currency_range = pygsheets.DataRange(start=currency_start, end=currency_end, worksheet=sheet)
-                currency_range.merge_cells()
+        time.sleep(10)
 
-                current_row_label = sheet_utils.format_addr((current_row_tuple[0] + 3, current_row_tuple[1]))
-                current_row_tuple = sheet_utils.format_addr(current_row_label)
+        self.current_exch_tuple = (self.current_exch_tuple[0] + 1 + self.currencies_len * 3 + self.row_spread,
+                                   self.current_exch_tuple[1])
 
-            current_row_tuple = (current_exch_tuple[0] + 1, current_exch_tuple[1] + 1)
-            current_row_label = sheet_utils.format_addr(current_row_tuple)
+        self.current_exch_label = sheet_utils.format_addr(self.current_exch_tuple)
 
-            current_cell = pygsheets.Cell(current_row_label, worksheet=sheet)
-            current_cell.color = currency_info_rows_color
-            current_cell.set_text_alignment(alignment="MIDDLE")
-            current_cell.set_text_alignment(alignment="CENTER")
+    def create_exchange_tables(self, force=False):
 
-            range_start = current_row_label
-            range_end = sheet_utils.format_addr((current_row_tuple[0] + currencies_len * 3 - 1, current_row_tuple[1]))
-            currencies_range = pygsheets.DataRange(start=range_start, end=range_end, worksheet=sheet)
-            currencies_range.applay_format(current_cell)
+        self.sheet.adjust_column_width(start=self.start_cell_tuple[1]-1, end=self.start_cell_tuple[1], pixel_size=90)
+        self.sheet.adjust_column_width(start=self.start_cell_tuple[1], end=self.start_cell_tuple[1]+26, pixel_size=75)
 
-            time.sleep(1)
 
-            # currency_info_rows_cell_list = []
-            for i in range(0, currencies_len):
 
-                for ii in range(0, len(currency_info_rows)):
-                    current_cell_tuple = (current_row_tuple[0]+ii, current_row_tuple[1])
-                    current_cell_label = sheet_utils.format_addr(current_cell_tuple)
+        # for exchange in self.exchanges:
+            # log.warning(
+            #     "\nself.current_exch_tuple: {}\nself.current_exch_label: {}".format(self.current_exch_tuple, self.current_exch_label))
 
-                    current_cell = pygsheets.Cell(current_cell_label, val=currency_info_rows[ii], worksheet=sheet)
-                    # current_cell.value = currency_info_rows[ii]
-                    exchange_update_cell_list.append(current_cell)
 
-                current_row_tuple = (current_row_tuple[0] + len(currency_info_rows), current_row_tuple[1])
-                current_row_label = sheet_utils.format_addr(current_row_label)
-
-            # sheet.update_cells(cell_list=currency_info_rows_cell_list)
-
-            base_cell = pygsheets.Cell("A1", worksheet=sheet)
-            base_cell.set_text_alignment(alignment="MIDDLE")
-            base_cell.set_text_alignment(alignment="CENTER")
-            # table_range.applay_format(base_cell)
-
-            sheet.update_cells(cell_list=exchange_update_cell_list)
-
-            time.sleep(10)
-
-            current_exch_tuple = (current_exch_tuple[0] + 1 + currencies_len * 3 + row_spread, current_exch_tuple[1])
-            current_exch_label = sheet_utils.format_addr(current_exch_tuple)
 
     def test_function(self):
-        sheet = self.doc.worksheet_by_title("ExchangesInfo")
-        exchange_cells = pygsheets.Cell("A1", worksheet=sheet)
-        # exchange_cells = pygsheets.DataRange(start="A1", end="A3", worksheet=sheet)
-        # exchange_cells.update_borders()
-        pprint(exchange_cells.format)
-        left_top = "C2"
-        # currencies_len = 8
-        # fiat_len = 9
-        #
-        # left_bottom = int(left_top[1:]) + currencies_len * 3
-        #
-        # right_top = int(left_top[1:]) + 1 + fiat_len + 3
-        # sheet.adjust_column_width(start=0, end=26, pixel_size=75)
-        # print(sheet_utils.format_addr(left_top))
-        # print(right_top)
-
-        # def update_exchanges_sheet(self,):
+        pprint(self.sheet.find("Bitfinex")[0].label)
 
