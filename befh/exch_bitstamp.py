@@ -8,7 +8,7 @@ from befh.util import Logger
 import time
 import threading
 import json
-from . import update_docs
+from befh import update_docs
 
 from functools import partial
 from datetime import datetime
@@ -160,6 +160,7 @@ class ExchGwBitstamp(ExchangeGateway):
         :param db_client: Database client
         """
         ExchangeGateway.__init__(self, ExchGwApiBitstamp(), db_clients)
+        self.exchange_doc = update_docs.ArbitrageDoc()
 
     @classmethod
     def get_exchange_name(cls):
@@ -211,7 +212,9 @@ class ExchGwBitstamp(ExchangeGateway):
             elif (self.api_socket.is_default_instmt(instmt) and channel_name == "live_trades") or \
                  (not self.api_socket.is_default_instmt(instmt) and channel_name == "live_trades_%s" % instmt.get_instmt_code()):
                     trade = self.api_socket.parse_trade(instmt, json.loads(message['data']))
-                    update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+                    self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
+                                                        instmt=instmt.get_instmt_name(),
+                                                        price=trade.trade_price)
 
     def start(self, instmt):
         """

@@ -10,7 +10,7 @@ import logging
 from pprint import pprint, pformat
 from pygsheets.exceptions import RequestError
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
@@ -56,48 +56,80 @@ class ArbitrageDoc(object):
 
         self.table_range = None
 
-    # def update_doc(self, exchange, instmt, price):
-    #     while True:
-    #         count = 0
-    #         try:
-    #             exchange_cell = self.get_cell_number(exchange, instmt)
-    #
-    #             self.sheet = self.doc.worksheet_by_title("ArbitrageTable")
-    #
-    #             self.sheet.update_cell(exchange_cell, price)
-    #             return True
-    #
-    #         except RequestError as e:
-    #             print("Encountered Request error: %s" % e)
-    #             count += 1
-    #
-    #         if count > 10:
-    #             return False
+    def get_instmt_number(self, exchange, instmt):
+        exch_table_tuples = self.get_table_tuples(exchange)
+        if not exch_table_tuples:
+            log.warning("Failed to determine %s table cells." % exchange)
+            return
 
-    def get_cell_number(self, exchange, instmt):
-        cells_config = self.project_root + os.sep + "exchange_cells.json"
-        with open(cells_config, 'r') as read:
-            cells = json.load(read)
-        pprint(cells)
+        if exchange not in self.sheet_info['exchanges'] \
+                or instmt not in self.sheet_info['exchanges'][exchange]['currency_pairs']:
+            log.info("%s not found in %s." % instmt, exchange)
+            return
 
-        return cells[exchange][instmt]['price']
+        base = self.sheet_info['exchanges'][exchange]['currency_pairs'][instmt]['base']
+        base_type = "crypto"
+        counter = self.sheet_info['exchanges'][exchange]['currency_pairs'][instmt]['counter']
+        counter_type = "fiat"
 
-    # def parse_cell(self, cell):
-    #     raw_regex = r'(?P<column>[A-Za-z]+)(?P<row>\d+)'
-    #     result = re.search(raw_regex, cell)
-    #     print(result)
-    #     return result.groupdict()
+        if base in self.fiat:
+            base_type = "fiat"
 
-    # def validate_exch_tables(self):
+        if counter in self.currencies:
+            counter_type = "crypto"
+
+        if base == "USDT":
+            base, counter = counter, base[:-1]
+
+        if base_type == "crypto" and counter == "crypto":
+            if base_type == "BTC":
+                base, counter = counter, base
+
+        currency_rows = self.get_currency_rows(exchange, returnas='cell')
+        fiat_columns = self.get_fiat_columns(exchange, returnas='cell')
+
+        currency_cell = None
+        for cell in currency_rows:
+            if cell.value == base:
+                currency_cell = cell
+
+        fiat_cell = None
+        for cell in fiat_columns:
+            if cell.value == counter:
+                fiat_cell = cell
+
+        return (currency_cell.row, fiat_cell.column)
+
+    def get_fiat_columns(self, exchange, returnas='matrix'):
+        exch_table_labels = self.get_table_labels(exchange)
+        return self.sheet.get_values(start=exch_table_labels[0],
+                                     end=exch_table_labels[2],
+                                     returnas=returnas,
+                                     include_empty=False)
+
+    def get_currency_rows(self, exchange, returnas='matrix'):
+        exch_table_labels = self.get_table_labels(exchange)
+        raw_rows = self.sheet.get_values(start=exch_table_labels[0],
+                                         end=exch_table_labels[2],
+                                         returnas=returnas,
+                                         include_empty=False)
+
+        return [i[0] for i in raw_rows if i]
+
     def find_exchange_label(self, exchange):
         exchange_start_cell = self.sheet.find(query=exchange)
         if not exchange_start_cell or len(exchange_start_cell) > 2:
+            log.warning("Failed to find exchange labels. \nStart cell: {}".format(exchange_start_cell))
             return False
 
+        log.debug("Start cell: {}".format(exchange_start_cell[0].label))
         return exchange_start_cell[0].label
 
-    def get_table_labels(self, exchange):
-        tuples = self.get_table_tuples(exchange)
+    def get_table_labels(self, exchange=None, tuples=None):
+        if not exchange and not tuple:
+            raise ValueError("Please provide either exchange name or tuples.")
+        if not tuples:
+            tuples = self.get_table_tuples(exchange)
         if not tuples:
             return False
 
@@ -111,7 +143,7 @@ class ArbitrageDoc(object):
         if not start_label:
             return False
 
-        lt = self.current_exch_tuple
+        lt = sheet_utils.format_addr(start_label)
         lb = (lt[0] + self.currencies_len * 3, lt[1])
         rt = (lt[0], lt[1] + 1 + self.fiat_len + len(self.info_columns))
         rb = (lb[0], rt[1])
@@ -119,24 +151,44 @@ class ArbitrageDoc(object):
         return lt, lb, rt, rb
 
     def validate_exch_tables(self):
+        missing = []
+        invalid = []
+        valid = []
+        updated = []
         for exchange in self.exchanges:
             status = self.validate_exch_table(exchange)
             if status == "Missing":
-                log.warning("%s table is missing. Creating table." % exchange)
-                self.create_exchange_tables()
+                missing.append(exchange)
             elif status == "Invalid":
-                log.warning("%s table is invalid. Recreating table." % exchange)
+                invalid.append(exchange)
+            elif status == "Valid":
+                valid.append(exchange)
+            else:
+                raise ValueError("Invalid status: {}.".format(status))
+
+        if missing:
+            log.warning("\nDetected missing exchange tables. Rebuilding all tables. \n{}\n.".format(pformat(missing)))
+            self.create_exchange_tables()
+            return
+        if invalid:
+            log.warning("\nDetected invalid exchange tables. Rebuilding all tables. \n{}\n.".format(pformat(invalid)))
+            for exchange in invalid:
                 self.create_exchange_table(exchange)
-            log.debug("Successfully validated %s table." % exchange)
+                updated.append(exchange)
+        if valid:
+            log.debug("\nSuccessfully validated following tables:\n{}\n".format(pformat(valid)))
+            log.debug("\nSuccessfully updated following tables:\n{}\n".format(pformat(updated)))
+            return True
 
     def validate_exch_table(self, exchange):
+        log.debug("Validating %s table..." % exchange)
         table_tuples = self.get_table_tuples(exchange)
         if not table_tuples:
             return "Missing"
         lt, lb, rt, rb = table_tuples[0], table_tuples[1], table_tuples[2], table_tuples[3]
-        columns = self.sheet.get_values(start=lt, end=rt, include_empty=False)[0]
-        raw_rows = self.sheet.get_values(start=lt, end=lb, include_empty=False)
-        rows = [i[0] for i in raw_rows if i]
+        log.debug("{} table starting cell: {}".format(exchange, lt))
+        columns = self.get_fiat_columns(exchange=exchange)[0]
+        rows = self.get_currency_rows(exchange=exchange)
         missing_fiat = [i for i in self.fiat if i not in columns]
         missing_info = [i for i in self.info_columns if i not in columns]
         missing_currencies = [i for i in self.currencies if i not in rows]
@@ -150,7 +202,29 @@ class ArbitrageDoc(object):
             return "Invalid"
         return "Valid"
 
+    def create_exchange_tables(self):
+        self.sheet.adjust_column_width(start=self.start_cell_tuple[1] - 1, end=self.start_cell_tuple[1], pixel_size=90)
+        self.sheet.adjust_column_width(start=self.start_cell_tuple[1], end=self.start_cell_tuple[1] + 26, pixel_size=75)
+
+        self.current_exch_label = self.start_cell_label
+        self.current_exch_tuple = self.start_cell_tuple
+
+        for exchange in self.exchanges:
+            while True:
+                count = 1
+                try:
+                    self.create_exchange_table(exchange)
+                    log.debug("Created %s table successfully." % exchange)
+                    break
+                except RequestError as e:
+                    log.warning("Encountered RequestError: {}. Retrying...".format(e))
+                    if count > 10:
+                        raise RequestError("Encountered more than 10 RequestErrors. Terminating")
+                    count += 1
+            time.sleep(10)
+
     def create_exchange_table(self, exchange):
+        log.info("Creating %s table..." % exchange)
         exchange_update_cell_list = []
         exchange_info = self.sheet_info['exchanges'][self.exchanges.index(exchange)][exchange]
 
@@ -159,27 +233,21 @@ class ArbitrageDoc(object):
         exchange_cell.set_text_alignment(alignment="MIDDLE")
         exchange_cell.set_text_alignment(alignment="CENTER")
 
-        table_start = self.current_exch_label
-        left_bottom = self.current_exch_tuple[0] + self.currencies_len * 3
-        right_top = self.current_exch_tuple[1] + 1 + self.fiat_len + len(self.info_columns)
-        table_end = sheet_utils.format_addr((left_bottom, right_top))
+        lt_tuple, lb_tuple, rt_tuple, rb_tuple = self.get_table_tuples(exchange)
+        lt_label, lb_label, rt_label, rb_label = self.get_table_labels(tuples=(lt_tuple, lb_tuple, rt_tuple, rb_tuple))
+        log.debug("lt_label: {}\nlb_label: {}\nrt_label: {}\nrb_label: {}\n".format(lt_label,
+                                                                                    lb_label,
+                                                                                    rt_label,
+                                                                                    rb_label))
 
-        # log.warning("\ntable_start: {}\nleft_bottom: {}\nright_top: {}\ntable_end: {}".format(
-        #     table_start,
-        #     left_bottom,
-        #     right_top,
-        #     table_end
-        # ))
-
-        table_range = pygsheets.DataRange(start=table_start, end=table_end, worksheet=self.sheet)
-        # table_range.applay_format(exchange_cell)
+        table_range = pygsheets.DataRange(start=lt_label, end=rb_label, worksheet=self.sheet)
         exchange_cell.color = tuple(exchange_info['info']['cell_color'])
 
         table_range.update_borders()
 
         # exchange_cell.value = exchange
 
-        current_col_tuple = (self.current_exch_tuple[0], self.current_exch_tuple[1] + 1)
+        current_col_tuple = (lt_tuple[0], lt_tuple[1] + 1)
         current_col_label = sheet_utils.format_addr(current_col_tuple)
 
         current_col_cell = pygsheets.Cell(current_col_label, val="Category", worksheet=self.sheet)
@@ -190,7 +258,7 @@ class ArbitrageDoc(object):
 
         column_range = pygsheets.DataRange(
             start=current_col_label,
-            end=sheet_utils.format_addr((current_col_tuple[0], right_top)),
+            end=sheet_utils.format_addr((current_col_tuple[0], rt_tuple[1])),
             worksheet=self.sheet
         )
         column_range.applay_format(current_col_cell)
@@ -305,16 +373,34 @@ class ArbitrageDoc(object):
 
         self.current_exch_label = sheet_utils.format_addr(self.current_exch_tuple)
 
-    def create_exchange_tables(self, force=False):
-
-        self.sheet.adjust_column_width(start=self.start_cell_tuple[1] - 1, end=self.start_cell_tuple[1], pixel_size=90)
-        self.sheet.adjust_column_width(start=self.start_cell_tuple[1], end=self.start_cell_tuple[1] + 26, pixel_size=75)
-
-
 
         # for exchange in self.exchanges:
         # log.warning(
         #     "\nself.current_exch_tuple: {}\nself.current_exch_label: {}".format(self.current_exch_tuple, self.current_exch_label))
+
+    def update_trade_cell(self, exchange, instmt, price):
+        log.debug("\nexchange: {}\ninstmt: {}\nprice: {}".format(exchange, instmt, price))
+        while True:
+            count = 0
+            try:
+                price_tuple = self.get_instmt_number(exchange=exchange, instmt=instmt)
+                # price_label = sheet_utils.format_addr(price_tuple)
+                if not price_tuple:
+                    raise ValueError("Could not locate instmt cell.")
+
+                self.sheet.update_cell(price_tuple, price)
+                return True
+
+            except RequestError as e:
+                print("Encountered Request error: %s" % e)
+                if count > 10:
+                    return False
+                count += 1
+
+
+
+
+
 
     def test_function(self):
         pprint(self.sheet.find("Bitfinex")[0].label)

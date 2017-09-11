@@ -20,6 +20,7 @@
     ],
     "fiat": [
       "AUD",
+      "BTC",
       "CAD",
       "CNY",
       "EUR",
@@ -57,7 +58,7 @@
       0
     ]
   },
-  "exchanges": [
+  "exchanges":
     {
       "AltcoinTrader": {
         "info": {
@@ -106,9 +107,7 @@
           "base": "NMC",
           "counter": "ZAR"
         }
-      }}
-    },
-    {
+      }},
       "Bitfinex": {
         "info": {
           "cell_color": [
@@ -180,9 +179,7 @@
           "base": "DASH",
           "counter": "BTC"
         }
-      }}
-    },
-    {
+      }},
       "BitMEX": {
         "info": {
           "cell_color": [
@@ -202,9 +199,7 @@
           "base": "BTC",
           "counter": "USD"
         }
-      }}
-    },
-    {
+      }},
       "Bitstamp": {
         "info": {
           "cell_color": [
@@ -220,7 +215,7 @@
           }
         },
         "currency_pairs": {
-        "btcusd": {
+        "BTCUSD": {
           "base": "BTC",
           "counter": "USD"
         },
@@ -268,9 +263,7 @@
           "base": "XRP",
           "counter": "BTC"
         }
-      }}
-    },
-    {
+      }},
       "Bittrex": {
         "info": {
           "cell_color": [
@@ -338,9 +331,7 @@
           "base": "BTC",
           "counter": "DASH"
         }
-      }}
-    },
-    {
+      }},
       "BTCC": {
         "info": {
           "cell_color": [
@@ -380,9 +371,7 @@
           "base": "BCH",
           "counter": "BTC"
         }
-      }}
-    },
-    {
+      }},
       "Gatecoin": {
         "info": {
           "cell_color": [
@@ -402,9 +391,7 @@
           "base": "BTC",
           "counter": "USD"
         }
-      }}
-    },
-    {
+      }},
       "Gdax": {
         "info": {
           "cell_color": [
@@ -456,9 +443,7 @@
           "base": "LTC",
           "counter": "BTC"
         }
-      }}
-    },
-    {
+      }},
       "Kraken": {
         "info": {
           "cell_color": [
@@ -578,9 +563,7 @@
           "base": "DASH",
           "counter": "BTC"
         }
-      }}
-    },
-    {
+      }},
       "Luno": {
         "info": {
           "cell_color": [
@@ -600,9 +583,7 @@
           "base": "BTC",
           "counter": "ZAR"
         }
-      }}
-    },
-    {
+      }},
       "OkCoin": {
         "info": {
           "cell_color": [
@@ -634,9 +615,7 @@
           "base": "LTC",
           "counter": "CNY"
         }
-      }}
-    },
-    {
+      }},
       "Poloniex": {
         "info": {
           "cell_color": [
@@ -716,9 +695,7 @@
           "base": "ETH",
           "counter": "ZEC"
         }
-      }}
-    },
-    {
+      }},
       "Quoine": {
         "info": {
           "cell_color": [
@@ -830,9 +807,7 @@
           "base": "BCH",
           "counter": "JPY"
         }
-      }}
-    },
-    {
+      }},
       "Yunbi": {
         "info": {
           "cell_color": [
@@ -854,5 +829,4 @@
         }
       }}
     }
-  ]
 }
