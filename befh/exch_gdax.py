@@ -9,7 +9,7 @@ from befh.util import Logger
 import time
 import threading
 import json
-from . import update_docs
+from befh import update_docs
 
 from functools import partial
 from datetime import datetime
@@ -111,7 +111,7 @@ class ExchGwApiGdaxTrades(WebSocketApiClient):
         Constructor
         """
         WebSocketApiClient.__init__(self, 'Gdax')
-        
+
     @classmethod
     def get_trades_timestamp_field_name(cls):
         return 'time'
@@ -200,6 +200,7 @@ class ExchGwGdax(ExchangeGateway):
         """
         ExchangeGateway.__init__(self, ExchGwApiGdaxTrades(), db_clients)
         self.api_socket2 = ExchGwApiGdaxOrderBook()
+        self.exchange_doc = update_docs.ArbitrageDoc()
 
     @classmethod
     def get_exchange_name(cls):
@@ -243,7 +244,9 @@ class ExchGwGdax(ExchangeGateway):
                 if message["product_id"] == instmt.get_instmt_code():
                     # Filter out the initial subscriptions
                     trade = self.api_socket.parse_trade(instmt, message)
-                    update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+                    self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
+                                                        instmt=instmt.get_instmt_code(),
+                                                        price=trade.trade_price)
 
             else:
                 # Never handler order book query here

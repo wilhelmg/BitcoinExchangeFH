@@ -6,7 +6,7 @@ from befh.util import Logger
 
 import time
 import threading
-from . import update_docs
+from befh import update_docs
 
 from functools import partial
 from datetime import datetime
@@ -146,6 +146,7 @@ class ExchGwKraken(ExchangeGateway):
         :param db_client: Database client
         """
         ExchangeGateway.__init__(self, ExchGwKrakenRestfulApi(), db_clients)
+        self.exchange_doc = update_docs.ArbitrageDoc()
 
     @classmethod
     def get_exchange_name(cls):
@@ -184,7 +185,9 @@ class ExchGwKraken(ExchangeGateway):
             try:
                 ret = self.api_socket.get_trades(instmt)
                 for trade in ret:
-                    update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+                    self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
+                                                        instmt=instmt.get_instmt_code(),
+                                                        price=trade.trade_price)
                     
                 # After the first time of getting the trade, indicate the instrument
                 # is recovered

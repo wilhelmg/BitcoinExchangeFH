@@ -7,7 +7,7 @@ from befh.util import Logger
 import time
 import threading
 import json
-from . import update_docs
+from befh import update_docs
 
 from functools import partial
 from datetime import datetime
@@ -116,6 +116,7 @@ class ExchGwOkCoin(ExchangeGateway):
         :param db_client: Database client
         """
         ExchangeGateway.__init__(self, ExchGwOkCoinWs(), db_clients)
+        self.exchange_doc = update_docs.ArbitrageDoc()
 
     @classmethod
     def get_exchange_name(cls):
@@ -187,7 +188,9 @@ class ExchGwOkCoin(ExchangeGateway):
                     elif message['channel'] == instmt.get_trades_channel_id():
                         for trade_raw in message['data']:
                             trade = self.api_socket.parse_trade(instmt, trade_raw)
-                            update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+                            self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
+                                                                instmt=instmt.get_instmt_code(),
+                                                                price=trade.trade_price)
 
                 elif 'success' in keys:
                     Logger.info(self.__class__.__name__, "Subscription to channel %s is %s" \

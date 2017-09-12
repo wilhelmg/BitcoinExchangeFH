@@ -3,6 +3,7 @@ from befh.exchange import ExchangeGateway
 from befh.instrument import Instrument
 from befh.ws_api_socket import WebSocketApiClient
 from befh.util import Logger
+from befh.sql_client_template import SqlClientTemplate
 
 import time
 import threading
@@ -258,7 +259,7 @@ class ExchGwBitfinex(ExchangeGateway):
                 if message[1] == 'tu':
                     trade = self.api_socket.parse_trade(instmt, message[3:])
                     self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
-                                                        instmt=instmt.get_instmt_code,
+                                                        instmt=instmt.get_instmt_code(),
                                                         price=trade.trade_price)
                     # if int(trade.trade_id) > int(instmt.get_exch_trade_id()):
                     #     instmt.incr_trade_id()
@@ -281,3 +282,12 @@ class ExchGwBitfinex(ExchangeGateway):
                                         on_open_handler=partial(self.on_open_handler, instmt),
                                         on_close_handler=partial(self.on_close_handler, instmt))]
 
+if __name__ == '__main__':
+    exchange_name = 'Bitfinex'
+    instmt_name = 'BTCUSD'
+    instmt_code = 'BTCUSD'
+    instmt = Instrument(exchange_name, instmt_name, instmt_code)
+    db_client = SqlClientTemplate()
+    Logger.init_log()
+    exch = ExchGwBitfinex([db_client])
+    td = exch.start(instmt)

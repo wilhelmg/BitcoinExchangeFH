@@ -7,7 +7,7 @@ from befh.sql_client_template import SqlClientTemplate
 
 import time
 import threading
-from . import update_docs
+from befh import update_docs
 
 from functools import partial
 from datetime import datetime
@@ -184,6 +184,7 @@ class ExchGwBtcc(ExchangeGateway):
         :param db_client: Database client
         """
         ExchangeGateway.__init__(self, ExchGwBtccRestfulApi(), db_clients)
+        self.exchange_doc = update_docs.ArbitrageDoc()
 
     @classmethod
     def get_exchange_name(cls):
@@ -228,7 +229,9 @@ class ExchGwBtcc(ExchangeGateway):
                 assert isinstance(trade.trade_id, str), "trade.trade_id(%s) = %s" % (type(trade.trade_id), trade.trade_id)
                 assert isinstance(instmt.get_exch_trade_id(), str), \
                        "instmt.get_exch_trade_id()(%s) = %s" % (type(instmt.get_exch_trade_id()), instmt.get_exch_trade_id())
-                update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+                self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
+                                                    instmt=instmt.get_instmt_code(),
+                                                    price=trade.trade_price)
 
             # After the first time of getting the trade, indicate the instrument
             # is recovered

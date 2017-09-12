@@ -9,7 +9,7 @@ import os
 import time
 import threading
 import json
-from . import update_docs
+from befh import update_docs
 
 from pprint import pformat
 from functools import partial
@@ -221,7 +221,7 @@ class ExchGwLuno(ExchangeGateway):
         :param db_client: Database client
         """
         ExchangeGateway.__init__(self, ExchGwApiLuno(), db_clients)
-        self.order_book = None
+        self.exchange_doc = update_docs.ArbitrageDoc()
 
     @classmethod
     def get_exchange_name(cls):
@@ -266,7 +266,7 @@ class ExchGwLuno(ExchangeGateway):
         keys = message.keys()
 
         if "bids" in keys:
-            self.order_book = self.api_socket.parse_l2_depth(instmt, message)
+            self.api_socket.parse_l2_depth(instmt, message)
             # Insert only if the first 5 levels are different
             # if instmt.get_l2_depth().is_diff(instmt.get_prev_l2_depth()):
             #     instmt.incr_order_book_id()
@@ -294,7 +294,9 @@ class ExchGwLuno(ExchangeGateway):
                     new_trade.update({"timestamp": message['timestamp']})
                     trade = self.api_socket.parse_trade(instmt, new_trade)
                     self.api_socket.parse_l2_depth(instmt, new_trade)
-                    update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+                    self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
+                                                        instmt=instmt.get_instmt_code(),
+                                                        price=trade.trade_price)
 
 
         else:

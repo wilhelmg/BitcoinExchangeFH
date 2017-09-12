@@ -7,7 +7,7 @@ from befh.util import Logger
 import time
 import threading
 import json
-from . import update_docs
+from befh import update_docs
 
 from functools import partial
 from datetime import datetime
@@ -155,6 +155,7 @@ class ExchGwBitmex(ExchangeGateway):
         :param db_client: Database client
         """
         ExchangeGateway.__init__(self, ExchGwBitmexWs(), db_clients)
+        self.exchange_doc = update_docs.ArbitrageDoc()
 
     @classmethod
     def get_exchange_name(cls):
@@ -206,7 +207,9 @@ class ExchGwBitmex(ExchangeGateway):
                     if trade_raw["symbol"] == instmt.get_instmt_code():
                         # Filter out the initial subscriptions
                         trade = self.api_socket.parse_trade(instmt, trade_raw)
-                        update_docs.update_doc(self.get_exchange_name(), trade.trade_price)
+                        self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
+                                                            instmt=instmt.get_instmt_code(),
+                                                            price=trade.trade_price)
 
             elif message['table'] == 'orderBook10':
                 for data in message['data']:

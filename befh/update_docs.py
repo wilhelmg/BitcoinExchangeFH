@@ -72,7 +72,7 @@ class ArbitrageDoc(object):
         counter = self.sheet_info['exchanges'][exchange]['currency_pairs'][instmt]['counter']
         counter_type = "fiat"
 
-        if base in self.fiat:
+        if base != "BTC" and base in self.fiat:
             base_type = "fiat"
 
         if counter in self.currencies:
@@ -85,36 +85,56 @@ class ArbitrageDoc(object):
             if base_type == "BTC":
                 base, counter = counter, base
 
+        log.debug("\nbase: {}\nbase_type: {}\ncounter: {}\ncounter_type: {}\n".format(base, base_type,
+                                                                                      counter, counter_type))
+
         currency_rows = self.get_currency_rows(exchange, returnas='cell')
         fiat_columns = self.get_fiat_columns(exchange, returnas='cell')
+        log.debug("\ncurrency_rows: \n{}\nfiat_columns: \n{}\n".format(currency_rows, fiat_columns))
 
         currency_cell = None
         for cell in currency_rows:
+            # log.debug("cell.value: {}".format(cell.value))
             if cell.value == base:
+                log.debug("{} == {}".format(cell.value, base))
                 currency_cell = cell
 
         fiat_cell = None
         for cell in fiat_columns:
+            # log.debug("cell.value: {}".format(cell.value))
             if cell.value == counter:
+                log.debug("{} == {}".format(cell.value, counter))
                 fiat_cell = cell
 
-        return (currency_cell.row, fiat_cell.column)
+        return currency_cell.row, fiat_cell.col
 
     def get_fiat_columns(self, exchange, returnas='matrix'):
         exch_table_labels = self.get_table_labels(exchange)
-        return self.sheet.get_values(start=exch_table_labels[0],
-                                     end=exch_table_labels[2],
-                                     returnas=returnas,
-                                     include_empty=False)
+        columns = self.sheet.get_values(start=exch_table_labels[0],
+                                       end=exch_table_labels[2],
+                                       returnas=returnas,
+                                       include_empty=False)
+        if not columns:
+            log.warning("Could not find values for requested columns: {}".format(columns))
+            return
+        elif len(columns) > 1:
+            log.warning("\nMore than one value present in columns: \n{}\n".format(pformat(columns)))
+            return
+        return columns[0]
 
     def get_currency_rows(self, exchange, returnas='matrix'):
         exch_table_labels = self.get_table_labels(exchange)
         raw_rows = self.sheet.get_values(start=exch_table_labels[0],
-                                         end=exch_table_labels[2],
+                                         end=exch_table_labels[1],
                                          returnas=returnas,
                                          include_empty=False)
+        log.debug("\nraw_rows: \n{}\n".format(raw_rows))
 
-        return [i[0] for i in raw_rows if i]
+        rows = [i[0] for i in raw_rows if i]
+        if not rows:
+            log.warning("Could not find values for requested rows: {}".format(rows))
+            return
+        return rows
 
     def find_exchange_label(self, exchange):
         exchange_start_cell = self.sheet.find(query=exchange)
@@ -396,11 +416,6 @@ class ArbitrageDoc(object):
                 if count > 10:
                     return False
                 count += 1
-
-
-
-
-
 
     def test_function(self):
         pprint(self.sheet.find("Bitfinex")[0].label)

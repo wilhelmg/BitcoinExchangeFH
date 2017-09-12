@@ -125,7 +125,7 @@
         "currency_pairs": {
         "BTCUSD": {
           "base": "BTC",
-          "counter": "USR"
+          "counter": "USD"
         },
         "BCHUSD": {
           "base": "BCH",
@@ -219,47 +219,47 @@
           "base": "BTC",
           "counter": "USD"
         },
-        "btceur": {
+        "BTCEUR": {
           "base": "BTC",
           "counter": "EUR"
         },
-        "eurusd": {
+        "EURUSD": {
           "base": "EUR",
           "counter": "USD"
         },
-        "ethusd": {
+        "ETHUSD": {
           "base": "ETH",
           "counter": "USD"
         },
-        "etheur": {
+        "ETHEUR": {
           "base": "ETH",
           "counter": "EUR"
         },
-        "ethbtc": {
+        "ETHBTC": {
           "base": "ETH",
           "counter": "BTC"
         },
-        "ltcusd": {
+        "LTCUSD": {
           "base": "LTC",
           "counter": "USD"
         },
-        "ltceur": {
+        "LTCEUR": {
           "base": "LTC",
           "counter": "EUR"
         },
-        "ltcbtc": {
+        "LTCBTC": {
           "base": "LTC",
           "counter": "BTC"
         },
-        "xrpusd": {
+        "XRPUSD": {
           "base": "XRP",
           "counter": "USD"
         },
-        "xrpeur": {
+        "XRPEUR": {
           "base": "XRP",
           "counter": "EUR"
         },
-        "xrpbtc": {
+        "XRPBTC": {
           "base": "XRP",
           "counter": "BTC"
         }
