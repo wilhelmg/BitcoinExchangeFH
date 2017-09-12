@@ -56,6 +56,9 @@ class ArbitrageDoc(object):
 
         self.table_range = None
 
+    def track_request_limit(self):
+        start =
+
     def get_instmt_number(self, exchange, instmt):
         exch_table_tuples = self.get_table_tuples(exchange)
         if not exch_table_tuples:

@@ -220,7 +220,7 @@ class ExchGwKraken(ExchangeGateway):
 if __name__ == '__main__':
     exchange_name = 'Bitfinex'
     instmt_name = 'BCHEUR'
-    instmt_code = 'BCHEUR'
+    instmt_code = 'bcheur'
     instmt = Instrument(exchange_name, instmt_name, instmt_code)
     db_client = SqlClientTemplate()
     Logger.init_log()
