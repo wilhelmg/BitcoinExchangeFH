@@ -8,6 +8,7 @@ from befh.sql_client_template import SqlClientTemplate
 import time
 import threading
 from befh import update_docs
+from pprint import pformat
 
 from functools import partial
 from datetime import datetime
@@ -111,7 +112,7 @@ class ExchGwKrakenRestfulApi(RESTfulApiSocket):
             return None
 
     @classmethod
-    def get_trades(cls, instmt):
+    def get_trades(cls, instmt, trade_id=None):
         """
         Get trades
         :param instmt: Instrument
@@ -186,6 +187,7 @@ class ExchGwKraken(ExchangeGateway):
             try:
                 ret = self.api_socket.get_trades(instmt)
                 for trade in ret:
+                    print("trade: {}\n".format(pformat(trade.__dict__)))
                     self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
                                                         instmt=instmt.get_instmt_code(),
                                                         price=trade.trade_price)
@@ -211,14 +213,14 @@ class ExchGwKraken(ExchangeGateway):
         instmt.set_instmt_snapshot_table_name(self.get_instmt_snapshot_table_name(instmt.get_exchange_name(),
                                                                                   instmt.get_instmt_name()))
         self.init_instmt_snapshot_table(instmt)
-        t1 = threading.Thread(target=partial(self.get_order_book_worker, instmt))
-        t1.start()
+        # t1 = threading.Thread(target=partial(self.get_order_book_worker, instmt))
+        # t1.start()
         t2 = threading.Thread(target=partial(self.get_trades_worker, instmt))
         t2.start()
-        return [t1, t2]
+        return [t2]
 
 if __name__ == '__main__':
-    exchange_name = 'Bitfinex'
+    exchange_name = 'Kraken'
     instmt_name = 'BCHEUR'
     instmt_code = 'bcheur'
     instmt = Instrument(exchange_name, instmt_name, instmt_code)
