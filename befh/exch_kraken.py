@@ -198,6 +198,8 @@ class ExchGwKraken(ExchangeGateway):
                     instmt.set_recovered(True)
                     
             except Exception as e:
+                for r in ret:
+                    print("this class: {}".format(r.__dict__))
                 Logger.error(self.__class__.__name__,
                           "Error in trades: %s\nReturn: %s" % (e, ret))
             time.sleep(0.5)
