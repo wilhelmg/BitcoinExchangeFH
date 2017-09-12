@@ -3,6 +3,7 @@ from befh.exchange import ExchangeGateway
 from befh.market_data import L2Depth, Trade
 from befh.instrument import Instrument
 from befh.util import Logger
+from befh.sql_client_template import SqlClientTemplate
 
 import time
 import threading
@@ -216,5 +217,12 @@ class ExchGwKraken(ExchangeGateway):
         t2.start()
         return [t1, t2]
 
-
-
+if __name__ == '__main__':
+    exchange_name = 'Bitfinex'
+    instmt_name = 'BCHEUR'
+    instmt_code = 'BCHEUR'
+    instmt = Instrument(exchange_name, instmt_name, instmt_code)
+    db_client = SqlClientTemplate()
+    Logger.init_log()
+    exch = ExchGwKraken([db_client])
+    td = exch.start(instmt)

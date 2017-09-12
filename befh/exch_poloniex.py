@@ -258,8 +258,8 @@ class ExchGwPoloniex(ExchangeGateway):
 if __name__ == '__main__':
     Logger.init_log()
     exchange_name = 'Poloniex'
-    instmt_name = 'BTCETH'
-    instmt_code = 'BTC_ETH'
+    instmt_name = 'USDTBTC'
+    instmt_code = 'USDT_BTC'
     instmt = Instrument(exchange_name, instmt_name, instmt_code)    
     db_client = SqlClientTemplate()
     exch = ExchGwPoloniex([db_client])

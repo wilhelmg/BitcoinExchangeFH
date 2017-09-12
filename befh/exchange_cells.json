@@ -496,107 +496,107 @@
           }
         },
         "currency_pairs": {
-        "XBTUSD": {
+        "xbtusd": {
           "base": "BTC",
           "counter": "USD"
         },
-        "XBTEUR": {
+        "xbteur": {
           "base": "BTC",
           "counter": "EUR"
         },
-        "XBTGBP": {
+        "xbtgbp": {
           "base": "BTC",
           "counter": "GBP"
         },
-        "XBTCAD": {
+        "xbtcad": {
           "base": "BTC",
           "counter": "CAD"
         },
-        "XBTJPY": {
+        "xbtjpy": {
           "base": "BTC",
           "counter": "JPY"
         },
-        "BCHEUR": {
+        "bcheur": {
           "base": "BCH",
           "counter": "EUR"
         },
-        "BCHUSD": {
+        "bchusd": {
           "base": "BCH",
           "counter": "USD"
         },
-        "BCHXBT": {
+        "bchxbt": {
           "base": "BTC",
           "counter": "BTC"
         },
-        "ETHUSD": {
+        "ethusd": {
           "base": "ETH",
           "counter": "USD"
         },
-        "ETHCAD": {
+        "ethcad": {
           "base": "ETH",
           "counter": "CAD"
         },
-        "ETHEUR": {
+        "etheur": {
           "base": "ETH",
           "counter": "EUR"
         },
-        "ETHGBP": {
+        "ethgbp": {
           "base": "ETH",
           "counter": "GBP"
         },
-        "ETHJPY": {
+        "ethjpy": {
           "base": "ETH",
           "counter": "JPY"
         },
-        "ETHXBT": {
+        "ethxbt": {
           "base": "ETH",
           "counter": "BTC"
         },
-        "LTCUSD": {
+        "ltcusd": {
           "base": "LTC",
           "counter": "USD"
         },
-        "LTCEUR": {
+        "ltceur": {
           "base": "LTC",
           "counter": "EUR"
         },
-        "LTCXBT": {
+        "ltcxbt": {
           "base": "LTC",
           "counter": "BTC"
         },
-        "ZECUSD": {
+        "zecusd": {
           "base": "ZEC",
           "counter": "USD"
         },
-        "ZECEUR": {
+        "zeceur": {
           "base": "ZEC",
           "counter": "EUR"
         },
-        "ZECXBT": {
+        "zecxbt": {
           "base": "ZEC",
           "counter": "BTC"
         },
-        "XRPUSD": {
+        "xrpusd": {
           "base": "XRP",
           "counter": "USD"
         },
-        "XRPEUR": {
+        "xrpeur": {
           "base": "XRP",
           "counter": "EUR"
         },
-        "XRPXBT": {
+        "xrpxbt": {
           "base": "XRP",
           "counter": "BTC"
         },
-        "DASHEUR": {
+        "dasheur": {
           "base": "DASH",
           "counter": "EUR"
         },
-        "DASHUSD": {
+        "dashusd": {
           "base": "DASH",
           "counter": "USD"
         },
-        "DASHXBT": {
+        "dashxbt": {
           "base": "DASH",
           "counter": "BTC"
         }
@@ -748,99 +748,99 @@
           }
         },
         "currency_pairs": {
-        "BTCUSD": {
+        "1": {
           "base": "BTC",
           "counter": "USD"
         },
-        "BTCEUR": {
+        "3": {
           "base": "BTC",
           "counter": "EUR"
         },
-        "BTCJPY": {
+        "5": {
           "base": "BTC",
           "counter": "JPY"
         },
-        "BTCSGD": {
+        "7": {
           "base": "BTC",
           "counter": "SGD"
         },
-        "BTCHKD": {
+        "9": {
           "base": "BTC",
           "counter": "HKD"
         },
-        "BTCIDR": {
+        "11": {
           "base": "BTC",
           "counter": "IDR"
         },
-        "BTCAUD": {
+        "13": {
           "base": "BTC",
           "counter": "AUD"
         },
-        "BTCPHP": {
+        "15": {
           "base": "BTC",
           "counter": "PHP"
         },
-        "BTCCNY": {
+        "17": {
           "base": "BTC",
           "counter": "CNY"
         },
-        "BTCINR": {
+        "18": {
           "base": "BTC",
           "counter": "INR"
         },
-        "ETHUSD": {
+        "27": {
           "base": "ETH",
           "counter": "USD"
         },
-        "ETHEUR": {
+        "28": {
           "base": "ETH",
           "counter": "EUR"
         },
-        "ETHJPY": {
+        "29": {
           "base": "ETH",
           "counter": "JPY"
         },
-        "ETHSGD": {
+        "30": {
           "base": "ETH",
           "counter": "SGD"
         },
-        "ETHHKD": {
+        "31": {
           "base": "ETH",
           "counter": "HKD"
         },
-        "ETHIDR": {
+        "32": {
           "base": "ETH",
           "counter": "IDR"
         },
-        "ETHAUD": {
+        "33": {
           "base": "ETH",
           "counter": "AUD"
         },
-        "ETHPHP": {
+        "34": {
           "base": "ETH",
           "counter": "PHP"
         },
-        "ETHCNY": {
+        "35": {
           "base": "ETH",
           "counter": "CNY"
         },
-        "ETHINR": {
+        "36": {
           "base": "ETH",
           "counter": "INR"
         },
-        "ETHBTC": {
+        "37": {
           "base": "ETH",
           "counter": "BTC"
         },
-        "BCHUSD": {
+        "39": {
           "base": "BCH",
           "counter": "USD"
         },
-        "BCHSGD": {
+        "40": {
           "base": "BCH",
           "counter": "SGD"
         },
-        "BCHJPY": {
+        "41": {
           "base": "BCH",
           "counter": "JPY"
         }
