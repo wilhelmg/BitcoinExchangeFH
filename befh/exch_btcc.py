@@ -382,6 +382,7 @@ class ExchGwBtccSpot(ExchGwBtcc):
         :param db_client: Database client
         """
         ExchangeGateway.__init__(self, ExchGwBtccSpotRestfulApi(), db_clients)
+        self.exchange_doc = update_docs.ArbitrageDoc()
 
     @classmethod
     def get_exchange_name(cls):
@@ -420,11 +421,12 @@ if __name__ == '__main__':
     instmt = Instrument(exchange_name, instmt_name, instmt_code)    
     db_client = SqlClientTemplate()
     exch = ExchGwBtccSpot([db_client])
-    instmt.set_l2_depth(L2Depth(5))
-    instmt.set_prev_l2_depth(L2Depth(5))
-    instmt.set_order_book_table_name(exch.get_order_book_table_name(instmt.get_exchange_name(),
-                                                                    instmt.get_instmt_name()))
-    instmt.set_trades_table_name(exch.get_trades_table_name(instmt.get_exchange_name(),
-                                                            instmt.get_instmt_name()))
-    instmt.set_recovered(False)    
-    exch.get_order_book_worker(instmt)
+    # instmt.set_l2_depth(L2Depth(5))
+    # instmt.set_prev_l2_depth(L2Depth(5))
+    # instmt.set_order_book_table_name(exch.get_order_book_table_name(instmt.get_exchange_name(),
+    #                                                                 instmt.get_instmt_name()))
+    # instmt.set_trades_table_name(exch.get_trades_table_name(instmt.get_exchange_name(),
+    #                                                         instmt.get_instmt_name()))
+    # instmt.set_recovered(False)
+    # exch.get_order_book_worker(instmt)
+    exch.start(instmt)

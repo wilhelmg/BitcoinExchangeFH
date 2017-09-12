@@ -3,6 +3,7 @@ from befh.market_data import L2Depth, Trade
 from befh.exchange import ExchangeGateway
 from befh.instrument import Instrument
 from befh.util import Logger
+from befh.sql_client_template import SqlClientTemplate
 
 import time
 import threading
@@ -240,3 +241,12 @@ class ExchGwBitmex(ExchangeGateway):
                                         on_open_handler=partial(self.on_open_handler, instmt),
                                         on_close_handler=partial(self.on_close_handler, instmt))]
 
+if __name__ == '__main__':
+    exchange_name = 'BitMEX'
+    instmt_name = 'XBTUSD'
+    instmt_code = 'XBTUSD'
+    instmt = Instrument(exchange_name, instmt_name, instmt_code)
+    db_client = SqlClientTemplate()
+    Logger.init_log()
+    exch = ExchGwBitmex([db_client])
+    td = exch.start(instmt)

@@ -81,8 +81,8 @@ class ArbitrageDoc(object):
         if base == "USDT":
             base, counter = counter, base[:-1]
 
-        if base_type == "crypto" and counter == "crypto":
-            if base_type == "BTC":
+        if base_type == "crypto" and counter_type == "crypto":
+            if base == "BTC":
                 base, counter = counter, base
 
         log.debug("\nbase: {}\nbase_type: {}\ncounter: {}\ncounter_type: {}\n".format(base, base_type,

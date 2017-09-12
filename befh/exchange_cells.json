@@ -332,7 +332,7 @@
           "counter": "DASH"
         }
       }},
-      "BTCC": {
+      "BTCC_Spot": {
         "info": {
           "cell_color": [
             0.91764706,
@@ -347,30 +347,39 @@
           }
         },
         "currency_pairs": {
-        "BTCUSD": {
+        "btcusd": {
           "base": "BTC",
           "counter": "USD"
         },
-        "BTCEUR": {
+        "btceur": {
           "base": "BTC",
           "counter": "EUR"
         },
-        "ETHUSD": {
+        "btccny": {
+          "base": "BTC",
+          "counter": "CNY"
+        },
+        "ethusd": {
           "base": "ETH",
           "counter": "USD"
         },
-        "ETHEUR": {
+        "etheur": {
           "base": "ETH",
           "counter": "EUR"
         },
-        "ETHBTC": {
+        "ethbtc": {
           "base": "ETH",
           "counter": "BTC"
         },
-        "BCHBTC": {
+        "ethcny": {
+          "base": "ETH",
+          "counter": "CNY"
+        },
+        "bchbtc": {
           "base": "BCH",
           "counter": "BTC"
         }
+
       }},
       "Gatecoin": {
         "info": {
@@ -387,9 +396,37 @@
           }
         },
         "currency_pairs": {
+        "BCHBTC": {
+          "base": "BCH",
+          "counter": "BTC"
+        },
         "BTCUSD": {
           "base": "BTC",
           "counter": "USD"
+        },
+        "BTCEUR": {
+          "base": "BTC",
+          "counter": "EUR"
+        },
+        "BTCHKD": {
+          "base": "BTC",
+          "counter": "HKD"
+        },
+        "ETHUSD": {
+          "base": "ETH",
+          "counter": "USD"
+        },
+        "ETHHKD": {
+          "base": "ETH",
+          "counter": "HKD"
+        },
+        "ETHEUR": {
+          "base": "ETH",
+          "counter": "EUR"
+        },
+        "ETHBTC": {
+          "base": "ETH",
+          "counter": "BTC"
         }
       }},
       "Gdax": {
@@ -599,19 +636,19 @@
           }
         },
         "currency_pairs": {
-        "btc_cny": {
+        "spotusd_btc": {
           "base": "BTC",
           "counter": "CNY"
         },
-        "bcc_cny": {
+        "spotusd_bcc": {
           "base": "BCH",
           "counter": "CNY"
         },
-        "eth_cny": {
+        "spotusd_eth": {
           "base": "ETH",
           "counter": "CNY"
         },
-        "ltc_cny": {
+        "spotusd_ltc": {
           "base": "LTC",
           "counter": "CNY"
         }
