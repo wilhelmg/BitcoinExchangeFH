@@ -10,7 +10,7 @@ import logging
 from pprint import pprint, pformat
 from pygsheets.exceptions import RequestError
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, filename="doc_logging.log")
 log = logging.getLogger(__name__)
 
 
@@ -56,8 +56,8 @@ class ArbitrageDoc(object):
 
         self.table_range = None
 
-    def track_request_limit(self):
-        start =
+    # def track_request_limit(self):
+    #     start =
 
     def get_instmt_number(self, exchange, instmt):
         exch_table_tuples = self.get_table_tuples(exchange)
