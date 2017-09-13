@@ -8,7 +8,7 @@ from befh.sql_client_template import SqlClientTemplate
 import time
 import threading
 from befh import update_docs
-from pprint import pformat
+from pprint import pformat, pprint
 
 from functools import partial
 from datetime import datetime
@@ -92,7 +92,6 @@ class ExchGwKrakenRestfulApi(RESTfulApiSocket):
 
         # Trade id
         trade.trade_id = trade.date_time + '-' + str(instmt.get_exch_trade_id())
-
         return trade
 
     @classmethod
@@ -127,14 +126,12 @@ class ExchGwKrakenRestfulApi(RESTfulApiSocket):
             if 'last' in res.keys():
                 instmt.set_exch_trade_id(res['last'])
                 del res['last']
-
             res = list(res.values())[0]
 
             for t in res:
                 trade = cls.parse_trade(instmt=instmt,
                                         raw=t)
                 trades.append(trade)
-
         return trades
 
 
@@ -187,7 +184,8 @@ class ExchGwKraken(ExchangeGateway):
             try:
                 ret = self.api_socket.get_trades(instmt)
                 for trade in ret:
-                    print("trade: {}\n".format(pformat(trade.__dict__)))
+                    # print("instmt: {}".format(pformat(instmt.__dict__)))
+                    # print("trade: {}\n".format(pformat(trade.__dict__)))
                     self.exchange_doc.update_trade_cell(exchange=self.get_exchange_name(),
                                                         instmt=instmt.get_instmt_code(),
                                                         price=trade.trade_price)
@@ -198,8 +196,6 @@ class ExchGwKraken(ExchangeGateway):
                     instmt.set_recovered(True)
                     
             except Exception as e:
-                for r in ret:
-                    print("this class: {}".format(r.__dict__))
                 Logger.error(self.__class__.__name__,
                           "Error in trades: %s\nReturn: %s" % (e, ret))
             time.sleep(0.5)
@@ -219,12 +215,13 @@ class ExchGwKraken(ExchangeGateway):
         # t1.start()
         t2 = threading.Thread(target=partial(self.get_trades_worker, instmt))
         t2.start()
+        t2.join()
         return [t2]
 
 if __name__ == '__main__':
     exchange_name = 'Kraken'
-    instmt_name = 'BCHEUR'
-    instmt_code = 'bcheur'
+    instmt_name = 'XBTJPY'
+    instmt_code = 'xbtjpy'
     instmt = Instrument(exchange_name, instmt_name, instmt_code)
     db_client = SqlClientTemplate()
     Logger.init_log()

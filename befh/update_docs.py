@@ -10,7 +10,7 @@ import logging
 from pprint import pprint, pformat
 from pygsheets.exceptions import RequestError
 
-logging.basicConfig(level=logging.DEBUG, filename="doc_logging.log")
+logging.basicConfig(level=logging.WARNING)
 log = logging.getLogger(__name__)
 
 

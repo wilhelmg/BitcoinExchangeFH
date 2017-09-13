@@ -24,6 +24,7 @@ from befh.file_client import FileClient
 from befh.zmq_client import ZmqClient
 from befh.subscription_manager import SubscriptionManager
 from befh.util import Logger
+from pprint import pprint, pformat
 
 
 def main():
@@ -150,6 +151,12 @@ def main():
                 Logger.info("[main]", "Starting instrument %s-%s..." % \
                     (instmt.get_exchange_name(), instmt.get_instmt_name()))
                 threads += exch.start(instmt)
+
+    for t in threads:
+        print("t: \n{}\n".format(pformat(t)))
+        t.join()
+        ret = t[1]
+        print("ret: \n{}\n".format(pformat(ret)))
 
 if __name__ == '__main__':
     main()
