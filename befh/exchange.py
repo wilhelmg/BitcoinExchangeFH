@@ -19,14 +19,14 @@ class ExchangeGateway:
     """
     def __init__(self, 
                  api_socket, 
-                 db_clients=[]):
+                 db_clients=None):
         """
         Constructor
         :param exchange_name: Exchange name
         :param exchange_api: Exchange API
         :param db_client: Database client
         """
-        self.db_clients = db_clients
+        self.db_clients = db_clients if db_clients else None
         self.api_socket = api_socket
         self.lock = Lock()
         self.exch_snapshot_id = 0

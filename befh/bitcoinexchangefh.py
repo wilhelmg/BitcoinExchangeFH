@@ -97,30 +97,30 @@ def main():
         db_clients.append(db_client)
         is_database_defined = True
 
-    if not is_database_defined:
-        print('Error: Please define which database is used.')
-        parser.print_help()
-        sys.exit(1)
+    # if not is_database_defined:
+    #     print('Error: Please define which database is used.')
+    #     parser.print_help()
+    #     sys.exit(1)
 
     # Subscription instruments
     if args.instmts is None or len(args.instmts) == 0:
         print('Error: Please define the instrument subscription list. You can refer to subscriptions.ini.')
         parser.print_help()
         sys.exit(1)
-        
+
     # Use exchange timestamp rather than local timestamp
     if args.exchtime:
         ExchangeGateway.is_local_timestamp = False
-    
+
     # Initialize subscriptions
     subscription_instmts = SubscriptionManager(args.instmts).get_subscriptions()
     if len(subscription_instmts) == 0:
         print('Error: No instrument is found in the subscription file. ' +
               'Please check the file path and the content of the subscription file.')
         parser.print_help()
-        sys.exit(1)        
-    
-    # Initialize snapshot destination
+        sys.exit(1)
+
+        # Initialize snapshot destination
     ExchangeGateway.init_snapshot_table(db_clients)
 
     Logger.info('[main]', 'Subscription file = %s' % args.instmts)
@@ -128,7 +128,7 @@ def main():
     for instmt in subscription_instmts:
         log_str += '%s/%s/%s\n' % (instmt.exchange_name, instmt.instmt_name, instmt.instmt_code)
     Logger.info('[main]', log_str)
-    
+
     exch_gws = []
     exch_gws.append(ExchGwBtccSpot(db_clients))
     exch_gws.append(ExchGwBtccFuture(db_clients))
@@ -137,7 +137,7 @@ def main():
     exch_gws.append(ExchGwOkCoin(db_clients))
     exch_gws.append(ExchGwKraken(db_clients))
     exch_gws.append(ExchGwGdax(db_clients))
-    exch_gws.append(ExchGwBitstamp(db_clients))
+    exch_gws.append(ExchGwBitstamp())
     exch_gws.append(ExchGwGatecoin(db_clients))
     exch_gws.append(ExchGwQuoine(db_clients))
     exch_gws.append(ExchGwPoloniex(db_clients))
@@ -149,7 +149,7 @@ def main():
         for instmt in subscription_instmts:
             if instmt.get_exchange_name() == exch.get_exchange_name():
                 Logger.info("[main]", "Starting instrument %s-%s..." % \
-                    (instmt.get_exchange_name(), instmt.get_instmt_name()))
+                            (instmt.get_exchange_name(), instmt.get_instmt_name()))
                 threads += exch.start(instmt)
 
     for t in threads:
@@ -157,6 +157,7 @@ def main():
         t.join()
         ret = t[1]
         print("ret: \n{}\n".format(pformat(ret)))
+
 
 if __name__ == '__main__':
     main()

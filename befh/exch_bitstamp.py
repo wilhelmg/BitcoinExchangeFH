@@ -158,7 +158,7 @@ class ExchGwBitstamp(ExchangeGateway):
     Exchange gateway
     """
 
-    def __init__(self, db_clients):
+    def __init__(self, db_clients=None):
         """
         Constructor
         :param db_client: Database client
